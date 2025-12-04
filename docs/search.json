@@ -4,6 +4,41 @@
     "href": "index.html",
     "title": "Analysis of Reviews",
     "section": "",
+    "text": "Figure 1: Distribtions of weights assigned by the different reviewers, ordered by category.\n\n\n\n\n\n\n\n\nTable 1: Weights assigned by the different reviewers.\n\n\n\n\n\n\nreviewer_id\nTheoretical Grounding\nTheoretical Insight\nOdds Of Success\nPractical Relevance\n\n\n\n\nB10\n0.167\n0.167\n0.333\n0.333\n\n\nB13\n0.150\n0.200\n0.400\n0.250\n\n\nB2\n0.300\n0.150\n0.400\n0.150\n\n\nB3\n0.200\n0.000\n0.400\n0.400\n\n\nB4\n0.200\n0.150\n0.300\n0.350\n\n\nB6\n0.250\n0.150\n0.100\n0.500\n\n\nB9\n0.250\n0.250\n0.250\n0.250"
+  },
+  {
+    "objectID": "index.html#top-20",
+    "href": "index.html#top-20",
+    "title": "Analysis of Reviews",
+    "section": "Top 20",
+    "text": "Top 20\n\n\n\n\n\n\n\n\nFigure 2: Top 20 interventions, according to their overall score (the combined weighted averages of the three reviewers). The line shows the range of reviews, from the lowest to the highest of the three scores. In colors are the average scores (not weighted) of the category-specific ratings of the three reviewers."
+  },
+  {
+    "objectID": "index.html#by-reviewer",
+    "href": "index.html#by-reviewer",
+    "title": "Analysis of Reviews",
+    "section": "By reviewer",
+    "text": "By reviewer\n\n\n\n\n\n\n\n\nFigure 3: Distribtions of reviewer scores (weighted averages of the different rating categories). Each dot corresponds to a review. Lines with dot in the middle (above the boxplots) represent the reviewer specific means and their 95% CIs."
+  },
+  {
+    "objectID": "index.html#by-content",
+    "href": "index.html#by-content",
+    "title": "Analysis of Reviews",
+    "section": "By content",
+    "text": "By content\n\n\n\n\n\n\n\n\nFigure 4: Distribtions of reviewer scores (weighted averages of the different rating categories) by content label. Each dot corresponds to a review. Lines with dot in the middle (above the boxplots) represent the specific means of the respective content labels, and their 95% CIs."
+  },
+  {
+    "objectID": "index.html#all",
+    "href": "index.html#all",
+    "title": "Analysis of Reviews",
+    "section": "All",
+    "text": "All\n\n\n\n\n\n\n\n\nFigure 5: All interventions, according to their overall score (the combined weighted averages of the three reviewers). The line shows the range of reviews, from the lowest to the highest of the three scores. In colors are the the category-specific averages (not weighted) of the three reviewers."
+  },
+  {
+    "objectID": "data_explorer.html",
+    "href": "data_explorer.html",
+    "title": "Data explorer",
+    "section": "",
     "text": "Content\n\n\n\n\n(bi)partisan support\n\n\n\n\n\nhigh public trust\n\n\n\n\n\nimpact of climate science\n\n\n\n\n\nintrospection\n\n\n\n\n\nLLM\n\n\n\n\n\nother\n\n\n\n\n\nportrait\n\n\n\n\n\nscientific consensus\n\n\n\n\n\nscientific findings\n\n\n\n\n\nscientific practices\n\n\n\n\n\nscientists’ background\n\n\n\n\n\nscientists’ values/motivation\n\n\n\n\n\nthird party endorsement\n\n\n\n\n\n\nOverall score\n\n\n\n\nFlagged\n\n\n\n\nfictional (or so it seems)\n\n\n\n\n\nnot ready to use\n\n\n\n\n\nunrelated"
   }
 ]

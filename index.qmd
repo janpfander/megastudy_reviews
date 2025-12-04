@@ -14,6 +14,9 @@ library(codename)
 library(blocksdesign) # randomly assign reviewers
 library(reactable)
 library(crosstalk)
+library(gghalves)
+library(plotly)
+library(wesanderson)
 ```
 
 ```{r functions}
@@ -26,132 +29,515 @@ reviews_long <- read_csv("reviews/reviews_long.csv")
 reviews_wide <- read_csv("reviews/reviews_wide.csv")
 ```
 
+# Weights
 
 ```{r}
-# The reactable table is inspired by this https://github.com/askozyreva/toolbox/blob/main/analysis/table_evidence.Rmd
-# https://interventionstoolbox.mpib-berlin.mpg.de/table_evidence.html
+# get weights from the review data
+weights <- reviews_long |> 
+  group_by(reviewer_id) |> 
+  summarise(across(ends_with("weight"), ~ unique(.x)))
 
-# the package and examples can be found here: https://glin.github.io/reactable/index.html
+# check
+# weights
+
+# make long format version
+weights_long <- weights |> 
+  pivot_longer(
+    cols = ends_with("weight"),
+    names_to = "category",
+    values_to = "weight"
+  ) |> 
+  mutate(
+    category = str_replace(category, "_weight", ""),
+    category = str_replace_all(category, "_", " ") |> str_to_title()
+  )
+```
+
+```{r}
+#| label: fig-weights
+#| fig-cap: Distribtions of weights assigned by the different reviewers, ordered by category.
 
 
-htmltools::tags$style("
-  .details-box, .detail-text {
-    white-space: pre-wrap;
-    word-wrap: break-word; 
-    overflow-wrap: break-word;
-  }
-")
-
-data <- SharedData$new(
-  reviews_wide |>
-    select(-intervention_id)
-)
-
-
-
-# get all details into row details
-row_details <- function(index) {
-  df <- data$data()        # extract underlying data frame
-  row <- df[index, , drop = FALSE]
-
-field <- function(label, value) {
-  if (is.null(value) || is.na(value) || value == "") return(NULL)
-
-  htmltools::tagList(
-    # Header
-    htmltools::div(
-      style = "
-        font-weight: 600;
-        margin-top: 10px;
-        color: #333;
-        font-size: 0.95rem;
-      ",
-      label
+# Plot
+p <- ggplot() +
+  
+  # Boxplot
+  geom_boxplot(
+    data = weights_long,
+    aes(x = category, y = weight),
+    width = 0.3,
+    outlier.shape = NA,
+    alpha = 0.7
+  ) +
+  
+  # Points with tooltips
+  geom_point(
+    data = weights_long,
+    aes(
+      x = category,
+      y = weight,
+      text = paste0(
+        "Reviewer: ", reviewer_id,
+        "<br>Weight: ", round(weight, 3)
+      )
     ),
+    position = position_jitter(width = 0.1),
+    size = 2,
+    alpha = 0.8
+  ) +
+  
+  labs(
+    x = NULL,
+    y = "Weight assigned by reviewers",
+  ) +
+  coord_flip() +
+  plot_theme
 
-    # Body text
-    htmltools::pre(
-      style = "
-        margin-left: 12px;
-        margin-top: 2px;
-        margin-bottom: 10px;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-        font-size: 0.9rem;
-      ",
-      value
-    )
-  )
-}
+# Convert to plotly
+ggplotly(p, tooltip = "text")
 
-  htmltools::div(
-    class = "details-box",
-    field("Reviewer comments — reviewer 1", row$reviewer_comments_1),
-    field("Reviewer comments — reviewer 2", row$reviewer_comments_2),
-    field("Reviewer comments — reviewer 3", row$reviewer_comments_3),
-    field("Description", row$description),
-    field("Stimulus", row$stimulus),
-    field("Tested before?", row$tested), 
-    field("Outcome previous test", row$outcome_previous_tests), 
-    field("Effective?", row$effective), 
-    field("Effect size", row$effect_size),
-    field("Citation", row$citation),
-    field("Comment", row$comment)
-  )
-}
+```
+
+```{r}
+#| label: tbl-weights
+#| tbl-cap: Weights assigned by the different reviewers.
 
 
-reactable_data <- reactable(
-  data,
-  details = row_details,
-  minRows = 10,
-  columns = list(
-    code_name = colDef(
-      sticky = "left",
-      style = list(borderRight = "1px solid #eee"),
-      headerStyle = list(borderRight = "1px solid #eee")
-    ),
-    description = colDef(show = FALSE),
-    stimulus = colDef(show = FALSE),
-    reviewer_comments_1 = colDef(show = FALSE),
-    reviewer_comments_2 = colDef(show = FALSE),
-    reviewer_comments_3 = colDef(show = FALSE),
-    tested = colDef(show = FALSE),
-    outcome_previous_tests = colDef(show = FALSE),
-    effective = colDef(show = FALSE),
-    effect_size = colDef(show = FALSE),
-    citation = colDef(show = FALSE), 
-    comment = colDef(show = FALSE)
-  ),
-  searchable = TRUE,
-  elementId = "reviews-table"
-)
+weights_clean <- weights |> 
+  rename_with(~ str_replace(.x, "_weight$", "") |>      # remove trailing _weight
+                 str_replace_all("_", " ") |>          # replace underscores with space
+                 str_to_title()                         # capitalize words
+              , 
+              .cols = -reviewer_id)  |>                    # leave reviewer_id unchanged
+  rounded_numbers()
 
-# produce table
-shiny::fluidRow(
-  shiny::column(
-    4,
-    filter_checkbox("intervention_content", "Content", data, ~intervention_content),
-    filter_slider("overall_score", "Overall score", data, ~overall_score, width = "100%", round = 1),
-    filter_checkbox("flag", "Flagged", data, ~flag)
-  ),
-  shiny::column(
-    8,
-    reactable_data
-  )
-)
+weights_clean |> 
+  kbl()
+```
+
+```{r}
+# non-interactive alternative
+# ggplot(weights_long, aes(x = category, y = weight)) +
+#   
+#   # Half violin (right), nudged slightly
+#   geom_half_violin(
+#     side = "r",
+#     alpha = 0.6,
+#     width = 0.7,
+#     trim = FALSE,
+#     position = position_nudge(x = 0.15)
+#   ) +
+#   
+#   # Half boxplot (left), nudged slightly
+#   geom_half_boxplot(
+#     side = "l",
+#     width = 0.4,
+#     outlier.shape = NA,
+#     position = position_nudge(x = -0.15)
+#   ) +
+#   
+#   # Points centered, with tooltip info
+#   geom_point(
+#     aes(
+#       text = paste0(
+#         "Reviewer: ", reviewer_id, "<br>",
+#         "Weight: ", round(weight, 3), "<br>",
+#         "Category: ", category
+#       )
+#     ),
+#     position = position_jitter(width = 0.03, height = 0),
+#     alpha = 0.8,
+#     size = 2
+#   ) +
+#   
+#   labs(
+#     x = NULL,
+#     y = "Reviewer Weight",
+#     title = "Distribution of Reviewer Weights by Category"
+#   ) +
+#   plot_theme +
+#   coord_flip()
+```
+
+# Scores
+
+## Top 20 
+
+```{r}
+#| label: fig-top20
+#| fig-cap: Top 20 interventions, according to their overall score (the combined weighted averages of the three reviewers). The line shows the range of reviews, from the lowest to the highest of the three scores. In colors are the average scores (not weighted) of the category-specific ratings of the three reviewers. 
+
+# Prepare plot data in one pipeline
+plot_data <- reviews_long %>%
+  group_by(intervention_id, code_name) %>%
+  summarise(
+    overall_score = mean(overall_score, na.rm = TRUE),
+    min_score = min(score, na.rm = TRUE),
+    max_score = max(score, na.rm = TRUE),
+    Theoretical_Grounding = mean(theoretical_grounding, na.rm = TRUE),
+    Theoretical_Insight   = mean(theoretical_insight, na.rm = TRUE),
+    Odds_of_Success       = mean(odds_of_success, na.rm = TRUE),
+    Practical_Relevance   = mean(practical_relevance, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  pivot_longer(
+    cols = c(Theoretical_Grounding, Theoretical_Insight, Odds_of_Success, Practical_Relevance),
+    names_to = "category",
+    values_to = "avg_score"
+  ) %>%
+  # Order interventions by overall_score descending
+  arrange(desc(overall_score)) %>%
+  left_join(reviews_wide |> 
+              select(code_name, score_1, score_2, score_3)) |> 
+  rounded_numbers() 
+
+
+# create ranks for top 20
+intervention_rank <- plot_data %>%
+  select(code_name, overall_score) |> 
+  distinct(code_name, overall_score) %>%
+  arrange(desc(overall_score), code_name) %>%
+  mutate(rank = row_number(),
+         code_name_ranked = paste0(rank, ". ", code_name)) |> 
+  select(-overall_score) |> 
+  slice_head(n = 20)
+
+# add ranks
+plot_data <- plot_data %>%
+  # select only top 20
+  filter(code_name %in% intervention_rank$code_name) |> 
+  left_join(intervention_rank, by = "code_name") 
+
+# Create a vector of code_name levels in descending overall_score
+# this is necessary, because we the ranks are in descending order
+levels_order <- plot_data %>%
+  distinct(code_name_ranked, code_name, overall_score) %>%          # one row per intervention
+  arrange(overall_score, desc(code_name)) %>%               # top overall_score first
+  pull(code_name_ranked)                                # extract code_name vector
+
+# Apply factor with correct levels
+plot_data <- plot_data %>%
+  mutate(code_name_ranked = factor(code_name_ranked, levels = levels_order)) 
+
+# 8. Plot
+p <- ggplot(plot_data, aes(x = code_name_ranked)) +
+  
+  # Pointrange: min → max reviewer score
+  geom_pointrange(
+    aes(x = code_name_ranked, 
+        y = overall_score, ymin = min_score, ymax = max_score, 
+        text = paste0(code_name, " (overall): ", overall_score, 
+                      "<br> Score 1: ", score_1,
+                      "<br> Score 2: ", score_2,
+                      "<br> Score 3: ", score_3)
+        ),
+    color = "gray50",
+    inherit.aes = FALSE,
+    position = position_nudge(x = 0.5)
+  ) +
+  
+  # Points for category averages, colored
+  geom_point(
+    aes(y = avg_score, color = category, 
+        text = paste0(code_name, 
+                      "<br>", category, ": ", avg_score)
+        ),
+    size = 0.8,
+    position = position_dodge(width = 0.3)
+  ) +
+  
+  # colors
+  scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  
+  # scale
+  scale_x_discrete(expand = expansion(add = c(0, 2))) +
+  
+  coord_flip() +
+  labs(
+    x = NULL,
+    y = "Score",
+    color = "Category",
+  ) +
+  plot_theme
+
+# make interactive
+ggplotly(p, tooltip = "text")
 ```
 
 
+## By reviewer
+
+```{r}
+#| label: fig-scores-by-reviewers
+#| fig-cap: Distribtions of reviewer scores (weighted averages of the different rating categories). Each dot corresponds to a review. Lines with dot in the middle (above the boxplots) represent the reviewer specific means and their 95% CIs.
+
+# Compute summary stats per reviewer
+summaries <- reviews_long %>%
+  rounded_numbers() |> 
+  group_by(reviewer_id) %>%
+  summarise(
+    mean_score = mean(score, na.rm = TRUE),
+    sd_score   = sd(score, na.rm = TRUE),
+    n          = n(),
+    se         = sd_score / sqrt(n),
+    ci_low     = mean_score - 1.96 * se,   # 95% CI
+    ci_high    = mean_score + 1.96 * se
+  ) %>%
+  arrange(mean_score) %>%                  # ORDER reviewers
+  rounded_numbers() |> 
+  mutate(reviewer_id = factor(reviewer_id, levels = reviewer_id))
+
+reviews_plot <- reviews_long %>%
+  mutate(reviewer_id = factor(reviewer_id,
+                              levels = summaries$reviewer_id)) |> 
+  rounded_numbers()
+
+p <- ggplot(reviews_plot, aes(x = reviewer_id, y = score)) +
+  
+  # Boxplot
+  geom_boxplot(
+    width = 0.3,
+    outlier.shape = NA,
+    alpha = 0.7
+  ) +
+  
+  # Means and confidence interval (95% CI)
+  geom_pointrange(
+    data = summaries,
+    aes(x = reviewer_id, 
+        y = mean_score, ymin = ci_low, ymax = ci_high,
+        text = paste0(
+        "Mean score: ", mean_score)
+        ),
+    width = 0.15,
+    linewidth = 0.7,
+    inherit.aes = FALSE,
+  position = position_nudge(x = 0.3)
+  ) +
+  
+  # Points with tooltips
+  geom_point(
+    data = reviews_plot,
+    aes(
+      text = paste0(
+        "Intervention: ", code_name,
+        "<br>Reviewer score: ", score,
+        "<br>Overall score: ", overall_score
+      )
+    ),
+    position = position_jitter(width = 0.1),
+    size = 2,
+    alpha = 0.8
+  ) +
+  
+  labs(
+    x = "Reviewer",
+    y = "Score"
+  ) +
+  coord_flip() +
+  plot_theme
 
 
+# Convert to plotly
+ggplotly(p, tooltip = "text")
+```
+
+## By content
+
+```{r}
+#| label: fig-scores-by-content
+#| fig-cap: Distribtions of reviewer scores (weighted averages of the different rating categories) by content label. Each dot corresponds to a review. Lines with dot in the middle (above the boxplots) represent the specific means of the respective content labels, and their 95% CIs.
+
+## --- Summary statistics per topic ---
+
+summaries_topic <- reviews_long %>%
+  rounded_numbers() %>%
+  group_by(intervention_content) %>%
+  summarise(
+    mean_score = mean(score, na.rm = TRUE),
+    sd_score   = sd(score, na.rm = TRUE),
+    n          = n(),
+    se         = sd_score / sqrt(n),
+    ci_low     = mean_score - 1.96 * se,
+    ci_high    = mean_score + 1.96 * se,
+    .groups = "drop"
+  ) %>%
+  arrange(mean_score) %>%        # ORDER topics
+  rounded_numbers() %>%
+  mutate(intervention_content = factor(intervention_content,
+                                       levels = intervention_content))
 
 
+## --- Apply the same order to the long data ---
+
+reviews_topic_plot <- reviews_long %>%
+  mutate(intervention_content = factor(intervention_content,
+                                       levels = summaries_topic$intervention_content)) %>%
+  rounded_numbers()
 
 
+## --- Plot ---
+
+p_topic <- ggplot(reviews_topic_plot, aes(x = intervention_content, y = score)) +
+  
+  # Boxplot per topic
+  geom_boxplot(
+    width = 0.3,
+    outlier.shape = NA,
+    alpha = 0.7
+  ) +
+  
+  # Mean + 95% CI per topic
+  geom_pointrange(
+    data = summaries_topic,
+    aes(
+      x = intervention_content,
+      y = mean_score,
+      ymin = ci_low,
+      ymax = ci_high,
+      text = paste0("Mean score: ", mean_score)
+    ),
+    width = 0.15,
+    linewidth = 0.7,
+    inherit.aes = FALSE,
+    position = position_nudge(x = 0.3)
+  ) +
+  
+  # Individual review scores
+  geom_point(
+    data = reviews_topic_plot,
+    aes(
+      text = paste0(
+        "Intervention: ", code_name,
+        "<br>Topic: ", intervention_content,
+        "<br>Overall score: ", overall_score
+      )
+    ),
+    position = position_jitter(width = 0.1),
+    size = 2,
+    alpha = 0.8
+  ) +
+  
+  labs(
+    x = "Intervention Topic",
+    y = "Score"
+  ) +
+  coord_flip() +
+  plot_theme
 
 
+## --- Convert to Plotly for tooltips ---
+ggplotly(p_topic, tooltip = "text")
+```
+
+
+## All 
+
+```{r}
+#| label: fig-ranking-all
+#| fig-cap: All interventions, according to their overall score (the combined weighted averages of the three reviewers). The line shows the range of reviews, from the lowest to the highest of the three scores. In colors are the the category-specific averages (not weighted) of the three reviewers. 
+#| fig-height: 40
+
+# Prepare plot data in one pipeline
+plot_data <- reviews_long %>%
+  group_by(intervention_id, code_name) %>%
+  summarise(
+    overall_score = mean(overall_score, na.rm = TRUE),
+    min_score = min(score, na.rm = TRUE),
+    max_score = max(score, na.rm = TRUE),
+    Theoretical_Grounding = mean(theoretical_grounding, na.rm = TRUE),
+    Theoretical_Insight   = mean(theoretical_insight, na.rm = TRUE),
+    Odds_of_Success       = mean(odds_of_success, na.rm = TRUE),
+    Practical_Relevance   = mean(practical_relevance, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  pivot_longer(
+    cols = c(Theoretical_Grounding, Theoretical_Insight, Odds_of_Success, Practical_Relevance),
+    names_to = "category",
+    values_to = "avg_score"
+  ) %>%
+  # Order interventions by overall_score descending
+  arrange(overall_score) %>%
+  left_join(reviews_wide |> 
+              select(code_name, score_1, score_2, score_3)) |> 
+  rounded_numbers()   # if you still want to round
+
+
+# create ranks
+intervention_rank <- plot_data %>%
+  select(code_name, overall_score) |> 
+  distinct(code_name, overall_score) %>%
+  arrange(desc(overall_score), code_name) %>%
+  mutate(rank = row_number(),
+         code_name_ranked = paste0(rank, ". ", code_name)) |> 
+  select(-overall_score)
+
+# add ranks
+plot_data <- plot_data %>%
+  left_join(intervention_rank, by = "code_name") 
+
+# Create a vector of code_name levels in descending overall_score
+levels_order <- plot_data %>%
+  distinct(code_name_ranked, code_name, overall_score) %>%          # one row per intervention
+  arrange(overall_score, desc(code_name)) %>%               # top overall_score first
+  pull(code_name_ranked)                                # extract code_name vector
+
+# Apply factor with correct levels
+plot_data <- plot_data %>%
+  mutate(code_name_ranked = factor(code_name_ranked, levels = levels_order)) 
+
+# Plot
+
+p <- ggplot(plot_data, aes(x = code_name_ranked)) +
+  
+  # Pointrange: min → max reviewer score
+  geom_pointrange(
+    aes(x = code_name_ranked, 
+        y = overall_score, ymin = min_score, ymax = max_score, 
+        text = paste0(code_name, " (overall): ", overall_score, 
+                      "<br> Score 1: ", score_1,
+                      "<br> Score 2: ", score_2,
+                      "<br> Score 3: ", score_3)
+        ),
+    color = "gray50",
+    inherit.aes = FALSE,
+    position = position_nudge(x = 0.5)
+  ) +
+  
+  # Points for category averages, colored
+  geom_point(
+    aes(y = avg_score, color = category, 
+        text = paste0(code_name, 
+                      "<br>", category, ": ", avg_score)
+    ),
+    size = 0.8,
+    position = position_dodge(width = 0.3)
+  ) +
+  
+  # since coords are flipped, use vline in horizontal
+  geom_vline(
+    xintercept = n_distinct(plot_data$code_name_ranked)-20 + 0.5,   # after the 20th intervention
+    color = "red",
+    linetype = "dashed"
+  ) +
+  
+  # colors
+  scale_color_manual(values = wes_palette("AsteroidCity1")) +
+  
+  # scale
+  scale_x_discrete(expand = expansion(add = c(0, 2))) +
+  
+  coord_flip() +
+  labs(
+    x = NULL,
+    y = "Score",
+    color = "Category",
+  ) +
+  plot_theme
+
+# make interactive
+ggplotly(p, tooltip = "text")
+```
 
 
 

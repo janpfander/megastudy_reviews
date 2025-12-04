@@ -9,8 +9,9 @@ website:
   navbar:
     left:
       - href: index.qmd
-        text: Analysis
-
+        text: Descriptives
+      - href: data_explorer.qmd
+        text: Data Explorer
 
   page-footer: 
     background: light
