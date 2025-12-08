@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Analysis of Reviews",
     "section": "",
-    "text": "Figure 1: Distribtions of weights assigned by the different reviewers, ordered by category.\n\n\n\n\n\n\n\n\nTable 1: Weights assigned by the different reviewers.\n\n\n\n\n\n\nreviewer_id\nTheoretical Grounding\nTheoretical Insight\nOdds Of Success\nPractical Relevance\n\n\n\n\nB10\n0.167\n0.167\n0.333\n0.333\n\n\nB13\n0.150\n0.200\n0.400\n0.250\n\n\nB2\n0.300\n0.150\n0.400\n0.150\n\n\nB3\n0.200\n0.000\n0.400\n0.400\n\n\nB4\n0.200\n0.150\n0.300\n0.350\n\n\nB6\n0.250\n0.150\n0.100\n0.500\n\n\nB9\n0.250\n0.250\n0.250\n0.250"
+    "text": "Figure 1: Distribtions of weights assigned by the different reviewers, ordered by category.\n\n\n\n\n\n\n\n\nTable 1: Weights assigned by the different reviewers.\n\n\n\n\n\n\nreviewer_id\nTheoretical Grounding\nTheoretical Insight\nOdds Of Success\nPractical Relevance\n\n\n\n\nB1\n0.250\n0.400\n0.150\n0.200\n\n\nB10\n0.167\n0.167\n0.333\n0.333\n\n\nB13\n0.150\n0.200\n0.400\n0.250\n\n\nB2\n0.300\n0.150\n0.400\n0.150\n\n\nB3\n0.200\n0.000\n0.400\n0.400\n\n\nB4\n0.200\n0.150\n0.300\n0.350\n\n\nB6\n0.250\n0.150\n0.100\n0.500\n\n\nB7\n0.250\n0.300\n0.300\n0.150\n\n\nB9\n0.250\n0.250\n0.250\n0.250"
   },
   {
     "objectID": "index.html#top-20",
