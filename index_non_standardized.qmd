@@ -1,5 +1,5 @@
 ---
-title: "Analysis of Reviews"
+title: "Analysis of Reviews (non-standardized)"
 subtitle: "Strengthening Trust in Climate Scientists Megastudy"
 #self-contained: true
 ---
@@ -109,7 +109,13 @@ $$
 For each reviewer, we computed a weighted average score for each intervention they reviewed. based on their own specific weights. Let $w_{r,c}$ be the weight reviewer $r$ gives to criterion $c$, and $x_{r,i,c}$ be their rating for intervention i on that criterion. Then the review score is:
 
 $$
-\text{score}_{r,i} = \frac{\sum_{c \in \text{rating\_vars}} w_{r,c} \cdot x_{r,i,c}}{\sum_{c \in \text{rating\_vars}} w_{r,c}}
+\text{score}_{r,i} = \frac{\sum_{c \in \text{rating\_vars}} w_{r,c} \cdot x_{r,i,c}}{\sum_{c \in \text{rating\_vars}} w_{r,c}} 
+$$
+
+Since the weights all add up to 1, this simplifies to: 
+
+$$
+\text{score}_{r,i} = \sum_{c \in \text{rating\_vars}} w_{r,c} \cdot x_{r,i,c}.
 $$
 
 Each intervention is reviewed by three reviewers. To get the overall score for an intervention, we take the average of the three reviewers’ weighted scores:
@@ -310,7 +316,7 @@ summaries <- reviews_long %>%
 reviews_plot <- reviews_long %>%
   mutate(reviewer_id = factor(reviewer_id,
                               levels = summaries$reviewer_id)) |> 
-  rounded_numbers()
+  rounded_numbers() 
 
 p <- ggplot(reviews_plot, aes(x = reviewer_id, y = score)) +
   
@@ -366,7 +372,7 @@ ggplotly(p, tooltip = "text")
 
 ```{r}
 #| label: fig-scores-by-content
-#| fig-cap: Distribtions of reviewer scores (weighted averages of the different rating categories) by content label. Each dot corresponds to a review. Lines with dot in the middle (above the boxplots) represent the specific means of the respective content labels, and their 95% CIs.
+#| fig-cap: Overall scores for interventions by content label. Each dot corresponds to an intervention. Lines with dot in the middle (above the boxplots) represent the specific means of the respective content labels, and their 95% CIs.
 
 ## --- Summary statistics per topic ---
 
@@ -374,7 +380,7 @@ summaries_topic <- reviews_long %>%
   rounded_numbers() %>%
   group_by(intervention_content) %>%
   summarise(
-    mean_score = mean(score, na.rm = TRUE),
+    mean_score = mean(overall_score, na.rm = TRUE),
     sd_score   = sd(score, na.rm = TRUE),
     n          = n(),
     se         = sd_score / sqrt(n),
@@ -393,7 +399,10 @@ summaries_topic <- reviews_long %>%
 reviews_topic_plot <- reviews_long %>%
   mutate(intervention_content = factor(intervention_content,
                                        levels = summaries_topic$intervention_content)) %>%
-  rounded_numbers()
+  rounded_numbers() |> 
+  group_by(code_name, intervention_content) |> 
+  summarize(score = mean(overall_score, na.rm=TRUE)) |> 
+  ungroup()
 
 
 ## --- Plot ---
@@ -420,7 +429,7 @@ p_topic <- ggplot(reviews_topic_plot, aes(x = intervention_content, y = score)) 
     width = 0.15,
     linewidth = 0.7,
     inherit.aes = FALSE,
-    position = position_nudge(x = 0.3)
+    position = position_nudge(x = 0.4)
   ) +
   
   # Individual review scores
@@ -430,7 +439,7 @@ p_topic <- ggplot(reviews_topic_plot, aes(x = intervention_content, y = score)) 
       text = paste0(
         "Intervention: ", code_name,
         "<br>Topic: ", intervention_content,
-        "<br>Overall score: ", overall_score
+        "<br>Overall score: ", score
       )
     ),
     position = position_jitter(width = 0.1),
@@ -558,7 +567,6 @@ p <- ggplot(plot_data, aes(x = code_name_ranked)) +
 # make interactive
 ggplotly(p, tooltip = "text")
 ```
-
 
 
 

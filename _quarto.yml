@@ -8,10 +8,20 @@ website:
   title: "Reviews Climsci Trust Megastudy"
   navbar:
     left:
-      - href: index.qmd
-        text: Descriptives
-      - href: data_explorer.qmd
-        text: Data Explorer
+      - text: "Analysis"
+        menu:
+          - href: index.qmd
+            text: "standardized scores"
+          - href: index_non_standardized.qmd
+            text: "non-standardized scores"
+      - text: "Data Explorer"
+        menu:
+          - href: data_explorer.qmd
+            text: "standardized scores"
+          - href: data_explorer_non_standardized.qmd
+            text: "non-standardized scores"
+          - href: data_explorer_comparison.qmd
+            text: "compare"
 
   page-footer: 
     background: light

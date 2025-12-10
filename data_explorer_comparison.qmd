@@ -23,18 +23,35 @@ source("R/functions.R")
 ```
 
 ```{r}
+details_vars <- c(
+  "reviewer_comments_1",
+  "reviewer_comments_2",
+  "reviewer_comments_3",
+  "description",
+  "stimulus",
+  "tested",
+  "outcome_previous_tests",
+  "effective",
+  "effect_size",
+  "citation",
+  "comment"
+)
+
 # read reviews
 reviews_wide <- read_csv("reviews/reviews_wide.csv") |> 
+  mutate(
+    ranking = min_rank(desc(overall_score)),
+    ranking_std = min_rank(desc(overall_std_score))
+  ) |> 
   select(
-    -overall_score,
-    -score_1,
-    -score_2,
-    -score_3,
-    -theoretical_grounding_mean,
-    -theoretical_insight_mean,
-    -odds_of_success_mean,
-    -practical_relevance_mean
-  )
+    code_name,
+    intervention_id,
+    ranking_std,
+    ranking,
+    overall_score,
+    overall_std_score,
+    all_of(details_vars)
+  ) 
 ```
 
 ```{r}
@@ -51,7 +68,6 @@ htmltools::tags$style("
     overflow-wrap: break-word;
   }
 ")
-
 data <- SharedData$new(
   reviews_wide |>
     select(-intervention_id)
@@ -138,19 +154,7 @@ reactable_data <- reactable(
   elementId = "reviews-table"
 )
 
-# produce table
-shiny::fluidRow(
-  shiny::column(
-    4,
-    filter_checkbox("intervention_content", "Content", data, ~intervention_content),
-    filter_slider("overall_std_score", "Overall score", data, ~overall_std_score, width = "100%", round = 1),
-    filter_checkbox("flag", "Flagged", data, ~flag)
-  ),
-  shiny::column(
-    8,
-    reactable_data
-  )
-)
+reactable_data
 ```
 
 

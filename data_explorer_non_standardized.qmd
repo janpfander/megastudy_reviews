@@ -25,16 +25,7 @@ source("R/functions.R")
 ```{r}
 # read reviews
 reviews_wide <- read_csv("reviews/reviews_wide.csv") |> 
-  select(
-    -overall_score,
-    -score_1,
-    -score_2,
-    -score_3,
-    -theoretical_grounding_mean,
-    -theoretical_insight_mean,
-    -odds_of_success_mean,
-    -practical_relevance_mean
-  )
+  select(-contains("std"))
 ```
 
 ```{r}
@@ -143,7 +134,7 @@ shiny::fluidRow(
   shiny::column(
     4,
     filter_checkbox("intervention_content", "Content", data, ~intervention_content),
-    filter_slider("overall_std_score", "Overall score", data, ~overall_std_score, width = "100%", round = 1),
+    filter_slider("overall_score", "Overall score", data, ~overall_score, width = "100%", round = 1),
     filter_checkbox("flag", "Flagged", data, ~flag)
   ),
   shiny::column(

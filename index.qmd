@@ -1,5 +1,5 @@
 ---
-title: "Analysis of Reviews"
+title: "Analysis of Reviews (standardized)"
 subtitle: "Strengthening Trust in Climate Scientists Megastudy"
 #self-contained: true
 ---
@@ -99,42 +99,6 @@ ggplotly(p, tooltip = "text")
 
 ```
 
-
-Each reviewer assigned a weight to each of the four evaluation criteria:
-
-$$
-\text{rating\_vars} = [\text{"Theoretical grounding"}, \text{"Theoretical insight"}, \text{"Odds of success"}, \text{"Practical relevance"}]
-$$
-
-For each reviewer, we computed a weighted average score for each intervention they reviewed. based on their own specific weights. Let $w_{r,c}$ be the weight reviewer $r$ gives to criterion $c$, and $x_{r,i,c}$ be their rating for intervention i on that criterion. Then the review score is:
-
-$$
-\text{score}_{r,i} = \frac{\sum_{c \in \text{rating\_vars}} w_{r,c} \cdot x_{r,i,c}}{\sum_{c \in \text{rating\_vars}} w_{r,c}}
-$$
-
-Each intervention is reviewed by three reviewers. To get the overall score for an intervention, we take the average of the three reviewers’ weighted scores:
-
-$$
-\text{overall\_score}_i = \frac{1}{3} \sum_{r=1}^{3} \text{score}_{r,i}
-$$
-
-```{r}
-#| label: tbl-weights
-#| tbl-cap: Weights assigned by the different reviewers.
-
-
-weights_clean <- weights |> 
-  rename_with(~ str_replace(.x, "_weight$", "") |>      # remove trailing _weight
-                 str_replace_all("_", " ") |>          # replace underscores with space
-                 str_to_title()                         # capitalize words
-              , 
-              .cols = -reviewer_id)  |>                    # leave reviewer_id unchanged
-  rounded_numbers()
-
-weights_clean |> 
-  kbl()
-```
-
 ```{r}
 # non-interactive alternative
 # ggplot(weights_long, aes(x = category, y = weight)) +
@@ -179,6 +143,66 @@ weights_clean |>
 #   coord_flip()
 ```
 
+```{r}
+#| label: tbl-weights
+#| tbl-cap: Weights assigned by the different reviewers.
+
+
+weights_clean <- weights |> 
+  rename_with(~ str_replace(.x, "_weight$", "") |>      # remove trailing _weight
+                 str_replace_all("_", " ") |>          # replace underscores with space
+                 str_to_title()                         # capitalize words
+              , 
+              .cols = -reviewer_id)  |>                    # leave reviewer_id unchanged
+  rounded_numbers()
+
+weights_clean |> 
+  kbl()
+```
+
+# Calculation of review scores
+
+## Weighted reviewer scores
+
+Each reviewer assigned a weight to each of the four evaluation criteria:
+
+$$
+\text{rating\_vars} = [\text{"Theoretical grounding"}, \text{"Theoretical insight"}, \text{"Odds of success"}, \text{"Practical relevance"}]
+$$
+
+For each reviewer, we computed a weighted average score for each intervention they reviewed. based on their own specific weights. Let $w_{r,c}$ be the weight reviewer $r$ gives to criterion $c$, and $x_{r,i,c}$ be their rating for intervention i on that criterion. Then the review score is:
+
+$$
+\text{score}_{r,i} = \frac{\sum_{c \in \text{rating\_vars}} w_{r,c} \cdot x_{r,i,c}}{\sum_{c \in \text{rating\_vars}} w_{r,c}} 
+$$
+
+Since the weights all add up to 1, this simplifies to: 
+
+$$
+\text{score}_{r,i} = \sum_{c \in \text{rating\_vars}} w_{r,c} \cdot x_{r,i,c}.
+$$
+
+## Standardization 
+
+Reviewers tend to use the rating scales differently: some use the whole scale, some use a narrow band; some generally assign higher scores, some generally lower scores. We therefore standardize the reviewer's scores by z_scoring them. Let: $\text{score}_{r,i}$ be the weighted score reviewer $r$ assigned to intervention $i$, $\mu_r$ be the mean of reviewer $r$'s scores across all interventions they rated, $\sigma_r$ be the standard deviation of reviewer $r$'s scores.
+
+Then the standardized score is:
+
+$$
+\text{zscore}_{r,i}
+= \frac{\text{score}_{r,i} - \mu_r}{\sigma_r}.
+$$
+
+This normalization places all reviews on a common scale in units of (reviewer specific) standard deviation (with mean $0$ and standard deviation $1$).
+
+## Final score per intervention
+
+Each intervention is reviewed by three reviewers. To get the overall score for an intervention, we take the average of the three reviewers’ weighted scores:
+
+$$
+\text{overall\_score}_i = \frac{1}{3} \sum_{r=1}^{3} \text{zscore}_{r,i}
+$$
+
 # Scores
 
 ## Top 20 
@@ -191,13 +215,13 @@ weights_clean |>
 plot_data <- reviews_long %>%
   group_by(intervention_id, code_name) %>%
   summarise(
-    overall_score = mean(overall_score, na.rm = TRUE),
-    min_score = min(score, na.rm = TRUE),
-    max_score = max(score, na.rm = TRUE),
-    Theoretical_Grounding = mean(theoretical_grounding, na.rm = TRUE),
-    Theoretical_Insight   = mean(theoretical_insight, na.rm = TRUE),
-    Odds_of_Success       = mean(odds_of_success, na.rm = TRUE),
-    Practical_Relevance   = mean(practical_relevance, na.rm = TRUE),
+    overall_score = mean(overall_std_score, na.rm = TRUE),
+    min_score = min(score_std, na.rm = TRUE),
+    max_score = max(score_std, na.rm = TRUE),
+    Theoretical_Grounding = mean(theoretical_grounding_std, na.rm = TRUE),
+    Theoretical_Insight   = mean(theoretical_insight_std, na.rm = TRUE),
+    Odds_of_Success       = mean(odds_of_success_std, na.rm = TRUE),
+    Practical_Relevance   = mean(practical_relevance_std, na.rm = TRUE),
     .groups = "drop"
   ) %>%
   pivot_longer(
@@ -208,7 +232,7 @@ plot_data <- reviews_long %>%
   # Order interventions by overall_score descending
   arrange(desc(overall_score)) %>%
   left_join(reviews_wide |> 
-              select(code_name, score_1, score_2, score_3)) |> 
+              select(code_name, score_std_1, score_std_2, score_std_3)) |> 
   rounded_numbers() 
 
 
@@ -247,9 +271,9 @@ p <- ggplot(plot_data, aes(x = code_name_ranked)) +
     aes(x = code_name_ranked, 
         y = overall_score, ymin = min_score, ymax = max_score, 
         text = paste0(code_name, " (overall): ", overall_score, 
-                      "<br> Score 1: ", score_1,
-                      "<br> Score 2: ", score_2,
-                      "<br> Score 3: ", score_3)
+                      "<br> Score 1: ", score_std_1,
+                      "<br> Score 2: ", score_std_2,
+                      "<br> Score 3: ", score_std_3)
         ),
     color = "gray50",
     inherit.aes = FALSE,
@@ -296,8 +320,8 @@ summaries <- reviews_long %>%
   rounded_numbers() |> 
   group_by(reviewer_id) %>%
   summarise(
-    mean_score = mean(score, na.rm = TRUE),
-    sd_score   = sd(score, na.rm = TRUE),
+    mean_score = mean(score_std, na.rm = TRUE),
+    sd_score   = sd(score_std, na.rm = TRUE),
     n          = n(),
     se         = sd_score / sqrt(n),
     ci_low     = mean_score - 1.96 * se,   # 95% CI
@@ -310,9 +334,9 @@ summaries <- reviews_long %>%
 reviews_plot <- reviews_long %>%
   mutate(reviewer_id = factor(reviewer_id,
                               levels = summaries$reviewer_id)) |> 
-  rounded_numbers()
+  rounded_numbers() 
 
-p <- ggplot(reviews_plot, aes(x = reviewer_id, y = score)) +
+p <- ggplot(reviews_plot, aes(x = reviewer_id, y = score_std)) +
   
   # Boxplot
   geom_boxplot(
@@ -341,8 +365,8 @@ p <- ggplot(reviews_plot, aes(x = reviewer_id, y = score)) +
     aes(
       text = paste0(
         "Intervention: ", code_name,
-        "<br>Reviewer score: ", score,
-        "<br>Overall score: ", overall_score
+        "<br>Reviewer score: ", score_std,
+        "<br>Overall score: ", overall_std_score
       )
     ),
     position = position_jitter(width = 0.1),
@@ -366,7 +390,7 @@ ggplotly(p, tooltip = "text")
 
 ```{r}
 #| label: fig-scores-by-content
-#| fig-cap: Distribtions of reviewer scores (weighted averages of the different rating categories) by content label. Each dot corresponds to a review. Lines with dot in the middle (above the boxplots) represent the specific means of the respective content labels, and their 95% CIs.
+#| fig-cap: Overall scores for interventions by content label. Each dot corresponds to an intervention. Lines with dot in the middle (above the boxplots) represent the specific means of the respective content labels, and their 95% CIs.
 
 ## --- Summary statistics per topic ---
 
@@ -374,8 +398,8 @@ summaries_topic <- reviews_long %>%
   rounded_numbers() %>%
   group_by(intervention_content) %>%
   summarise(
-    mean_score = mean(score, na.rm = TRUE),
-    sd_score   = sd(score, na.rm = TRUE),
+    mean_score = mean(overall_std_score, na.rm = TRUE),
+    sd_score   = sd(overall_std_score, na.rm = TRUE),
     n          = n(),
     se         = sd_score / sqrt(n),
     ci_low     = mean_score - 1.96 * se,
@@ -393,7 +417,10 @@ summaries_topic <- reviews_long %>%
 reviews_topic_plot <- reviews_long %>%
   mutate(intervention_content = factor(intervention_content,
                                        levels = summaries_topic$intervention_content)) %>%
-  rounded_numbers()
+  rounded_numbers() |> 
+  group_by(code_name, intervention_content) |> 
+  summarize(score = mean(overall_std_score, na.rm=TRUE)) |> 
+  ungroup()
 
 
 ## --- Plot ---
@@ -420,7 +447,7 @@ p_topic <- ggplot(reviews_topic_plot, aes(x = intervention_content, y = score)) 
     width = 0.15,
     linewidth = 0.7,
     inherit.aes = FALSE,
-    position = position_nudge(x = 0.3)
+    position = position_nudge(x = 0.4)
   ) +
   
   # Individual review scores
@@ -430,7 +457,7 @@ p_topic <- ggplot(reviews_topic_plot, aes(x = intervention_content, y = score)) 
       text = paste0(
         "Intervention: ", code_name,
         "<br>Topic: ", intervention_content,
-        "<br>Overall score: ", overall_score
+        "<br>Overall score: ", score
       )
     ),
     position = position_jitter(width = 0.1),
@@ -461,14 +488,14 @@ ggplotly(p_topic, tooltip = "text")
 # Prepare plot data in one pipeline
 plot_data <- reviews_long %>%
   group_by(intervention_id, code_name) %>%
-  summarise(
-    overall_score = mean(overall_score, na.rm = TRUE),
-    min_score = min(score, na.rm = TRUE),
-    max_score = max(score, na.rm = TRUE),
-    Theoretical_Grounding = mean(theoretical_grounding, na.rm = TRUE),
-    Theoretical_Insight   = mean(theoretical_insight, na.rm = TRUE),
-    Odds_of_Success       = mean(odds_of_success, na.rm = TRUE),
-    Practical_Relevance   = mean(practical_relevance, na.rm = TRUE),
+ summarise(
+    overall_score = mean(overall_std_score, na.rm = TRUE),
+    min_score = min(score_std, na.rm = TRUE),
+    max_score = max(score_std, na.rm = TRUE),
+    Theoretical_Grounding = mean(theoretical_grounding_std, na.rm = TRUE),
+    Theoretical_Insight   = mean(theoretical_insight_std, na.rm = TRUE),
+    Odds_of_Success       = mean(odds_of_success_std, na.rm = TRUE),
+    Practical_Relevance   = mean(practical_relevance_std, na.rm = TRUE),
     .groups = "drop"
   ) %>%
   pivot_longer(
@@ -479,7 +506,7 @@ plot_data <- reviews_long %>%
   # Order interventions by overall_score descending
   arrange(overall_score) %>%
   left_join(reviews_wide |> 
-              select(code_name, score_1, score_2, score_3)) |> 
+              select(code_name, score_std_1, score_std_2, score_std_3)) |>
   rounded_numbers()   # if you still want to round
 
 
@@ -515,9 +542,9 @@ p <- ggplot(plot_data, aes(x = code_name_ranked)) +
     aes(x = code_name_ranked, 
         y = overall_score, ymin = min_score, ymax = max_score, 
         text = paste0(code_name, " (overall): ", overall_score, 
-                      "<br> Score 1: ", score_1,
-                      "<br> Score 2: ", score_2,
-                      "<br> Score 3: ", score_3)
+                      "<br> Score 1: ", score_std_1,
+                      "<br> Score 2: ", score_std_2,
+                      "<br> Score 3: ", score_std_3)
         ),
     color = "gray50",
     inherit.aes = FALSE,
