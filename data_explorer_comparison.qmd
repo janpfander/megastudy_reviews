@@ -51,8 +51,15 @@ reviews_wide <- read_csv("reviews/reviews_wide.csv") |>
     overall_score,
     overall_std_score,
     all_of(details_vars)
-  ) 
+  ) |> 
+  # make this order the default
+  arrange(desc(overall_std_score))
 ```
+
+::: {.callout-note}
+Column names containing `_std` are based on standardized scores.
+:::
+
 
 ```{r}
 # The reactable table is inspired by this https://github.com/askozyreva/toolbox/blob/main/analysis/table_evidence.Rmd

@@ -16,12 +16,12 @@ website:
             text: "non-standardized scores"
       - text: "Data Explorer"
         menu:
+          - href: data_explorer_comparison.qmd
+            text: "overview"        
           - href: data_explorer.qmd
             text: "standardized scores"
           - href: data_explorer_non_standardized.qmd
             text: "non-standardized scores"
-          - href: data_explorer_comparison.qmd
-            text: "compare"
 
   page-footer: 
     background: light

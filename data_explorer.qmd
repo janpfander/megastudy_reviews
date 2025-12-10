@@ -34,7 +34,10 @@ reviews_wide <- read_csv("reviews/reviews_wide.csv") |>
     -theoretical_insight_mean,
     -odds_of_success_mean,
     -practical_relevance_mean
-  )
+  ) |> 
+  # make this order the default
+  arrange(desc(overall_std_score)) |> 
+  select(code_name, overall_std_score, everything(), flag, intervention_format)
 ```
 
 ```{r}
