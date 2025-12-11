@@ -1,6 +1,5 @@
 ---
-title: "Data explorer (non-standardized)"
-subtitle: "Strengthening Trust in Climate Scientists Megastudy"
+title: "Non-standardized ratings"
 #self-contained: true
 ---
 
@@ -25,7 +24,11 @@ source("R/functions.R")
 ```{r}
 # read reviews
 reviews_wide <- read_csv("reviews/reviews_wide.csv") |> 
-  select(-contains("std"))
+  select(-contains("std")) |> 
+  mutate(
+    ranking = min_rank(desc(overall_score)),
+  ) |> 
+  select(code_name, ranking, everything())
 ```
 
 ```{r}

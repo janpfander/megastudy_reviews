@@ -1,7 +1,5 @@
 ---
-title: "Data explorer (non-standardized)"
-subtitle: "Strengthening Trust in Climate Scientists Megastudy"
-#self-contained: true
+title: "Standardized ratings"
 ---
 
 ```{r setup}
@@ -37,7 +35,10 @@ reviews_wide <- read_csv("reviews/reviews_wide.csv") |>
   ) |> 
   # make this order the default
   arrange(desc(overall_std_score)) |> 
-  select(code_name, overall_std_score, everything(), flag, intervention_format)
+  mutate(
+    ranking_std = min_rank(desc(overall_std_score))
+  ) |> 
+  select(code_name, ranking_std, overall_std_score, everything(), flag, intervention_format)
 ```
 
 ```{r}

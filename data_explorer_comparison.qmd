@@ -1,7 +1,5 @@
 ---
-title: "Data explorer (non-standardized)"
-subtitle: "Strengthening Trust in Climate Scientists Megastudy"
-#self-contained: true
+title: "Compare standardized and non-standardized rankings"
 ---
 
 ```{r setup}
@@ -45,11 +43,12 @@ reviews_wide <- read_csv("reviews/reviews_wide.csv") |>
   ) |> 
   select(
     code_name,
+    intervention_content, 
     intervention_id,
     ranking_std,
     ranking,
-    overall_score,
     overall_std_score,
+    overall_score,
     all_of(details_vars)
   ) |> 
   # make this order the default

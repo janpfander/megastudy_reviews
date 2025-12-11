@@ -179,7 +179,7 @@ $$
 Since the weights all add up to 1, this simplifies to: 
 
 $$
-\text{score}_{r,i} = \sum_{c \in \text{rating\_vars}} w_{r,c} \cdot x_{r,i,c}.
+\text{score}_{r,i} = \sum_{c \in \text{rating\_vars}} w_{r,c} \cdot x_{r,i,c}
 $$
 
 ## Standardization 
