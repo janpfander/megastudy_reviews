@@ -1,0 +1,38 @@
+---
+title: "Plenary meeting for intervention selection"
+subtitle: "Strengthening Trust in Climate Scientists Megastudy"
+#self-contained: true
+---
+
+```{r setup}
+library(tidyverse)
+library(kableExtra)
+library(lubridate)
+library(ganttrify)
+library(tinytable)
+library(codename)
+library(blocksdesign) # randomly assign reviewers
+library(reactable)
+library(crosstalk)
+library(gghalves)
+library(plotly)
+library(wesanderson)
+```
+
+# Timeline
+
+- General points (~5mins)
+
+- 
+
+afterwards: summary
+
+# General points
+
+- 
+
+
+
+
+
+

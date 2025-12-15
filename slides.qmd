@@ -1,0 +1,541 @@
+---
+title: "Plenary meeting intervention selection"
+date: 2025-12-15
+#author: Jan Pfänder, Viktoria Cologna
+format: 
+  revealjs:
+    theme: simple
+    smaller: true
+    slide-number: true
+    chalkboard: true
+    history: false
+    # incremental: true
+    # code-link: true
+image: images/eawag_building.jpg
+type: presentation
+toc: false
+
+include-in-header:
+  - text: |
+      <style>
+      .five-col {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start; /* left-align all items */
+        gap: 10px; /* spacing between columns */
+      }
+      .five-col .person {
+        width: 18%;     /* roughly 5 items per row */
+        text-align: left; /* left-align text inside each person block */
+        margin-bottom: 10px;
+        font-size: 0.6em; /* reduce text size */
+      }
+      .five-col img {
+        border-radius: 6px;
+      }
+      </style>
+
+
+
+
+---
+
+```{r}
+# libraries
+library(tidyverse)
+library(kableExtra)
+```
+
+```{r}
+# read reviews
+reviews_wide <- read_csv("reviews/reviews_wide.csv") |> 
+  mutate(
+    ranking = min_rank(desc(overall_score)),
+    ranking_std = min_rank(desc(overall_std_score))
+  )
+```
+
+
+
+## Thank you!!
+
+<div class="five-col">
+
+<!-- <div class="person"> -->
+<!-- <img src="images/jan.jpeg" height="100"> -->
+<!-- <br> -->
+<!-- <b><a href="https://janpfander.github.io/">Jan Pfänder</a></b> -->
+<!-- </div> -->
+
+<div class="person">
+<img src="images/madalina.jpg" height="100">
+<br>
+<b><a href="https://profiles.stanford.edu/madalina-vlasceanu">Madalina Vlasceanu</a></b>
+</div>
+
+<div class="person">
+<img src="images/sara.png" height="100">
+<br>
+<b><a href="https://sustainability.stanford.edu/people/sara-constantino">Sara Constantino</a></b>
+</div>
+
+<div class="person">
+<img src="images/viktoria.jpg" height="100">
+<br>
+<b><a href="https://www.viktoriacologna.com/">Viktoria Cologna</a></b>
+</div>
+
+</div>
+
+<!-- ##### Advisory board -->
+
+<div class="five-col">
+
+<div class="person">
+<img src="images/mike.jpg" height="100">
+<br>
+<b><a href="https://www.ikmz.uzh.ch/en/research/divisions/science-crisis-and-risk-communication/mike-s-schaefer.html">Mike S. Schäfer</a></b>
+</div>
+
+<div class="person">
+<img src="images/mario.jpg" height="100">
+<br>
+<b><a href="https://knowledge4policy.ec.europa.eu/profile/mario-scharfbillig-1798_en">Mario Scharfbillig</a></b>
+</div>
+
+<div class="person">
+<img src="images/naomi.jpg" height="100">
+<br>
+<b><a href="https://histsci.fas.harvard.edu/people/naomi-oreskes">Naomi Oreskes</a></b>
+</div>
+
+<div class="person">
+<img src="images/hugo.jpg" height="100">
+<br>
+<b><a href="https://sites.google.com/site/hugomercier/">Hugo Mercier</a></b>
+</div>
+
+<div class="person">
+<img src="images/edward.png" height="100">
+<br>
+<b><a href="https://communication.gmu.edu/people/emaibach">Edward Wile Maibach</a></b>
+</div>
+
+<div class="person">
+<img src="images/james.jpeg" height="100">
+<br>
+<b><a href="https://sites.google.com/view/jamie-druckman">James Druckman</a></b>
+</div>
+
+<div class="person">
+<img src="images/cameron.jpg" height="100">
+<br>
+<b><a href="https://www.cameronbrick.com/">Cameron Brick</a></b>
+</div>
+
+<div class="person">
+<img src="images/john.jpg" height="100">
+<br>
+<b><a href="https://comartsci.msu.edu/our-people/john-c-besley">John C. Besley</a></b>
+</div>
+
+<div class="person">
+<img src="images/sebastian.jpeg" height="100">
+<br>
+<b><a href="https://sites.google.com/view/sebastianberger/start">Sebastian Berger</a></b>
+</div>
+
+<div class="person">
+<img src="images/marlene.jpg" height="100">
+<br>
+<b><a href="https://leibniz-psychology.org/profil-marlene-altenmueller">Marlene Altenmüller</a></b>
+</div>
+
+</div>
+
+---
+
+## Agenda
+
+- Overview (~15mins)
+
+- Validate final ranking (~45mins)
+
+- How to provide feedback to submitters? (~5mins)
+
+- Open discussion (~15mins)
+
+- Outlook (~10mins) 
+
+
+# Overview (~15mins)
+
+---
+
+## This meeting
+
+- Baseline rating: aggregated standardized scores
+
+- This meeting: raise issues and validate a proposal for final ranking
+
+---
+
+## Final inclusion criteria
+
+- No fictional characters
+
+- Implementability (how ready is the stimulus?)
+
+- Diversity 
+
+  - avoid redundancy: when complementary elements, try to merge (offer authorship to all teams); when essentially the same, pick only the best rated/most promising one
+  
+- Unrelatedness to outcome variable
+
+- Qualitative reviewer comments
+
+--- 
+
+## Solution for similar interventions
+
+- when complementary, try to merge (offer authorship to all teams) 
+
+- when essentially the same, pick the best rated/most promising one
+
+
+# Validate final ranking (~45mins)
+
+---
+
+```{r}
+# extract stimulus text
+stimulus_text <- reviews_wide |> 
+  filter(code_name == "miserly mackerel") |> 
+  pull(stimulus)
+
+name_rank <- reviews_wide |> 
+  filter(code_name == "miserly mackerel") |> 
+  mutate(label = paste0(code_name, " (rank ", ranking_std, ")")) |> 
+  pull(label)
+```
+
+::: columns
+
+::: {.column width="70%"}
+
+#### ``r name_rank ``
+
+<pre style="font-size: 0.42em; line-height: 1.2; white-space: pre-wrap;">
+`r stimulus_text`
+</pre>
+
+:::
+
+::: {.column width="30%" .fragment .smaller}
+
+### Reason for exlusion
+
+No fictional characters
+
+### Comments
+
+<div style="font-size: 0.8em; line-height: 1.2;">
+
+- explicitly telling participants to "imagine" makes it even weaker than other fictional stimuli
+
+- part 2: Overthrowing everything because of a new result is a rare event
+
+</div>
+
+:::
+
+:::
+
+---
+
+```{r}
+# extract stimulus text
+stimulus_text <- reviews_wide |> 
+  filter(code_name == "orchid orangutan") |> 
+  pull(stimulus)
+
+name_rank <- reviews_wide |> 
+  filter(code_name == "orchid orangutan") |> 
+  mutate(label = paste0(code_name, " (rank ", ranking_std, ")")) |> 
+  pull(label)
+```
+
+::: columns
+
+::: {.column width="70%"}
+
+#### ``r name_rank ``
+
+<pre style="font-size: 0.5em; line-height: 1.2; white-space: pre-wrap;">
+`r stimulus_text`
+</pre>
+
+:::
+
+::: {.column width="30%" .fragment .smaller}
+
+### Reason for exlusion
+
+Diversity
+
+### Comments
+
+<div style="font-size: 0.8em; line-height: 1.2;">
+
+- very similar to perfect prawn, but since perfect prawn was pre-tested and ranked higher, we remove orchid orangutan
+
+</div>
+
+:::
+
+:::
+
+---
+
+```{r}
+# extract stimulus text
+stimulus_text <- reviews_wide |> 
+  filter(code_name == "fatal firefly") |> 
+  pull(stimulus)
+
+name_rank <- reviews_wide |> 
+  filter(code_name == "fatal firefly") |> 
+  mutate(label = paste0(code_name, " (rank ", ranking_std, ")")) |> 
+  pull(label)
+```
+
+::: columns
+
+::: {.column width="70%"}
+
+#### ``r name_rank ``
+
+<pre style="font-size: 0.58em; line-height: 1.2; white-space: pre-wrap;">
+`r stimulus_text`
+</pre>
+
+:::
+
+::: {.column width="30%" .fragment .smaller}
+
+### Reason for exlusion
+
+Fictional/Diversity
+
+### Comments
+
+<div style="font-size: 0.8em; line-height: 1.2;">
+
+- reads as if directed to scientists, not laypeople
+- a bit similar to honored haddock, which seems better (and included)
+
+</div>
+
+:::
+
+:::
+
+---
+
+```{r}
+# extract stimulus text
+stimulus_text <- reviews_wide |> 
+  filter(code_name == "required rattlesnake") |> 
+  pull(stimulus)
+
+name_rank <- reviews_wide |> 
+  filter(code_name == "required rattlesnake") |> 
+  mutate(label = paste0(code_name, " (rank ", ranking_std, ")")) |> 
+  pull(label)
+```
+
+::: columns
+
+::: {.column width="70%"}
+
+#### ``r name_rank ``
+
+<pre style="font-size: 0.58em; line-height: 1.2; white-space: pre-wrap;">
+`r stimulus_text`
+</pre>
+
+:::
+
+::: {.column width="30%" .fragment .smaller}
+
+### Reason for exlusion
+
+Implementability/Major concerns on effectiveness
+
+### Comments
+
+<div style="font-size: 0.6em; line-height: 1.2;">
+
+- not clear if this is ready to implement - other LLMs have done pre-test and seem to be ready to deploy
+- could heavily backfire if the skeptical LLM turns out to be very convincing
+- the least trusting participants will probably have a hard time coming up with pro-trust arguments
+- other, more "classic" LLM interventions seem more safe to test here
+
+</div>
+
+:::
+
+:::
+
+---
+
+```{r}
+# extract stimulus text
+stimulus_text <- reviews_wide |> 
+  filter(code_name == "popular parrot") |> 
+  pull(stimulus)
+
+name_rank <- reviews_wide |> 
+  filter(code_name == "popular parrot") |> 
+  mutate(label = paste0(code_name, " (rank ", ranking_std, ")")) |> 
+  pull(label)
+```
+
+::: columns
+
+::: {.column width="70%"}
+
+#### ``r name_rank ``
+
+<pre style="font-size: 0.58em; line-height: 1.2; white-space: pre-wrap;">
+`r stimulus_text`
+</pre>
+
+:::
+
+::: {.column width="30%" .fragment .smaller}
+
+### Reason for exlusion
+
+Unrelated
+
+### Comments
+
+<div style="font-size: 0.em; line-height: 1.2;">
+
+- Effect on trust in climate scientists too speculative
+
+</div>
+
+:::
+
+:::
+
+---
+
+```{r}
+# extract stimulus text
+stimulus_text <- reviews_wide |> 
+  filter(code_name == "valid vole") |> 
+  pull(stimulus)
+
+name_rank <- reviews_wide |> 
+  filter(code_name == "valid vole") |> 
+  mutate(label = paste0(code_name, " (rank ", ranking_std, ")")) |> 
+  pull(label)
+```
+
+::: columns
+
+::: {.column width="70%"}
+
+#### ``r name_rank ``
+
+<pre style="font-size: 0.58em; line-height: 1.2; white-space: pre-wrap;">
+`r stimulus_text`
+</pre>
+
+:::
+
+::: {.column width="30%" .fragment .smaller}
+
+### Reason for exlusion
+
+Fictional
+
+### Comments
+
+<div style="font-size: 0.em; line-height: 1.2;">
+
+- Very obviously fictional
+
+</div>
+
+:::
+
+:::
+
+---
+
+```{r}
+# extract stimulus text
+stimulus_text <- reviews_wide |> 
+  filter(code_name == "wan wren") |> 
+  pull(stimulus)
+
+name_rank <- reviews_wide |> 
+  filter(code_name == "wan wren") |> 
+  mutate(label = paste0(code_name, " (rank ", ranking_std, ")")) |> 
+  pull(label)
+```
+
+::: columns
+
+::: {.column width="70%"}
+
+#### ``r name_rank ``
+
+<pre style="font-size: 0.58em; line-height: 1.2; white-space: pre-wrap;">
+`r stimulus_text`
+</pre>
+
+:::
+
+::: {.column width="30%" .fragment .smaller}
+
+### Reason for exlusion
+
+Diversity
+
+### Comments
+
+<div style="font-size: 0.em; line-height: 1.2;">
+
+- There is a better intellectual humility intervention already (flimsy fish)
+- It's too short and mixes uncertainty and intellectual humility
+
+</div>
+
+:::
+
+:::
+
+# How to provide feedback to submitters? (~5mins)
+
+---
+
+## Current idea
+
+- In general: only overall rating + if will be tested or not
+
+- In addition, to those in the top 20 and which are excluded, explanation regarding why
+
+# Open discussion (~15mins)
+
+
+# Outlook (~10mins)
+
+---
+
+![](images/timeline.png){width=100%}
+

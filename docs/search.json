@@ -1,5 +1,47 @@
 [
   {
+    "objectID": "slides.html#thank-you",
+    "href": "slides.html#thank-you",
+    "title": "Plenary meeting intervention selection",
+    "section": "Thank you!!",
+    "text": "Thank you!!\n\n\n\n\n\n\n\n  Madalina Vlasceanu\n\n\n  Sara Constantino\n\n\n  Viktoria Cologna\n\n\n\n\n\n  Mike S. Schäfer\n\n\n  Mario Scharfbillig\n\n\n  Naomi Oreskes\n\n\n  Hugo Mercier\n\n\n  Edward Wile Maibach\n\n\n  James Druckman\n\n\n  Cameron Brick\n\n\n  John C. Besley\n\n\n  Sebastian Berger\n\n\n  Marlene Altenmüller"
+  },
+  {
+    "objectID": "slides.html#agenda",
+    "href": "slides.html#agenda",
+    "title": "Plenary meeting intervention selection",
+    "section": "Agenda",
+    "text": "Agenda\n\nOverview (~15mins)\nValidate final ranking (~45mins)\nHow to provide feedback to submitters? (~5mins)\nOpen discussion (~15mins)\nOutlook (~10mins)"
+  },
+  {
+    "objectID": "slides.html#this-meeting",
+    "href": "slides.html#this-meeting",
+    "title": "Plenary meeting intervention selection",
+    "section": "This meeting",
+    "text": "This meeting\n\nBaseline rating: aggregated standardized scores\nThis meeting: raise issues and validate a proposal for final ranking"
+  },
+  {
+    "objectID": "slides.html#final-inclusion-criteria",
+    "href": "slides.html#final-inclusion-criteria",
+    "title": "Plenary meeting intervention selection",
+    "section": "Final inclusion criteria",
+    "text": "Final inclusion criteria\n\nNo fictional characters\nImplementability (how ready is the stimulus?)\nDiversity\n\navoid redundancy: when complementary elements, try to merge (offer authorship to all teams); when essentially the same, pick only the best rated/most promising one\n\nUnrelatedness to outcome variable\nQualitative reviewer comments"
+  },
+  {
+    "objectID": "slides.html#solution-for-similar-interventions",
+    "href": "slides.html#solution-for-similar-interventions",
+    "title": "Plenary meeting intervention selection",
+    "section": "Solution for similar interventions",
+    "text": "Solution for similar interventions\n\nwhen complementary, try to merge (offer authorship to all teams)\nwhen essentially the same, pick the best rated/most promising one"
+  },
+  {
+    "objectID": "slides.html#current-idea",
+    "href": "slides.html#current-idea",
+    "title": "Plenary meeting intervention selection",
+    "section": "Current idea",
+    "text": "Current idea\n\nIn general: only overall rating + if will be tested or not\nIn addition, to those in the top 20 and which are excluded, explanation regarding why"
+  },
+  {
     "objectID": "index_non_standardized.html",
     "href": "index_non_standardized.html",
     "title": "Analysis of Reviews (non-standardized)",
@@ -35,11 +77,67 @@
     "text": "All\n\n\n\n\n\n\n\n\nFigure 5: All interventions, according to their overall score (the combined weighted averages of the three reviewers). The line shows the range of reviews, from the lowest to the highest of the three scores. In colors are the the category-specific averages (not weighted) of the three reviewers."
   },
   {
-    "objectID": "data_explorer_non_standardized.html",
-    "href": "data_explorer_non_standardized.html",
-    "title": "Non-standardized ratings",
+    "objectID": "index copy.html",
+    "href": "index copy.html",
+    "title": "Analysis of Reviews (standardized)",
     "section": "",
-    "text": "Content\n\n\n\n\n(bi)partisan support\n\n\n\n\n\nhigh public trust\n\n\n\n\n\nimpact of climate science\n\n\n\n\n\nintrospection\n\n\n\n\n\nLLM\n\n\n\n\n\nother\n\n\n\n\n\nportrait\n\n\n\n\n\nscientific consensus\n\n\n\n\n\nscientific findings\n\n\n\n\n\nscientific practices\n\n\n\n\n\nscientists’ background\n\n\n\n\n\nscientists’ values/motivation\n\n\n\n\n\nthird party endorsement\n\n\n\n\n\n\nOverall score\n\n\n\n\nFlagged\n\n\n\n\nfictional (or so it seems)\n\n\n\n\n\nnot ready to use\n\n\n\n\n\nunrelated"
+    "text": "Figure 1: Distribtions of weights assigned by the different reviewers, ordered by category.\n\n\n\n\n\n\n\n\nTable 1: Weights assigned by the different reviewers.\n\n\n\n\n\n\nreviewer_id\nTheoretical Grounding\nTheoretical Insight\nOdds Of Success\nPractical Relevance\n\n\n\n\nB1\n0.250\n0.400\n0.150\n0.200\n\n\nB10\n0.167\n0.167\n0.333\n0.333\n\n\nB12\n0.300\n0.150\n0.300\n0.250\n\n\nB13\n0.150\n0.200\n0.400\n0.250\n\n\nB2\n0.300\n0.150\n0.400\n0.150\n\n\nB3\n0.200\n0.000\n0.400\n0.400\n\n\nB4\n0.200\n0.150\n0.300\n0.350\n\n\nB5\n0.100\n0.300\n0.300\n0.300\n\n\nB6\n0.250\n0.150\n0.100\n0.500\n\n\nB7\n0.250\n0.300\n0.300\n0.150\n\n\nB8\n0.250\n0.250\n0.250\n0.250\n\n\nB9\n0.250\n0.250\n0.250\n0.250"
+  },
+  {
+    "objectID": "index copy.html#weighted-reviewer-scores",
+    "href": "index copy.html#weighted-reviewer-scores",
+    "title": "Analysis of Reviews (standardized)",
+    "section": "Weighted reviewer scores",
+    "text": "Weighted reviewer scores\nEach reviewer assigned a weight to each of the four evaluation criteria:\n\\[\n\\text{rating\\_vars} = [\\text{\"Theoretical grounding\"}, \\text{\"Theoretical insight\"}, \\text{\"Odds of success\"}, \\text{\"Practical relevance\"}]\n\\]\nFor each reviewer, we computed a weighted average score for each intervention they reviewed. based on their own specific weights. Let \\(w_{r,c}\\) be the weight reviewer \\(r\\) gives to criterion \\(c\\), and \\(x_{r,i,c}\\) be their rating for intervention i on that criterion. Then the review score is:\n\\[\n\\text{score}_{r,i} = \\frac{\\sum_{c \\in \\text{rating\\_vars}} w_{r,c} \\cdot x_{r,i,c}}{\\sum_{c \\in \\text{rating\\_vars}} w_{r,c}}\n\\]\nSince the weights all add up to 1, this simplifies to:\n\\[\n\\text{score}_{r,i} = \\sum_{c \\in \\text{rating\\_vars}} w_{r,c} \\cdot x_{r,i,c}\n\\]"
+  },
+  {
+    "objectID": "index copy.html#standardization",
+    "href": "index copy.html#standardization",
+    "title": "Analysis of Reviews (standardized)",
+    "section": "Standardization",
+    "text": "Standardization\nReviewers tend to use the rating scales differently: some use the whole scale, some use a narrow band; some generally assign higher scores, some generally lower scores. We therefore standardize the reviewer’s scores by z_scoring them. Let: \\(\\text{score}_{r,i}\\) be the weighted score reviewer \\(r\\) assigned to intervention \\(i\\), \\(\\mu_r\\) be the mean of reviewer \\(r\\)’s scores across all interventions they rated, \\(\\sigma_r\\) be the standard deviation of reviewer \\(r\\)’s scores.\nThen the standardized score is:\n\\[\n\\text{zscore}_{r,i}\n= \\frac{\\text{score}_{r,i} - \\mu_r}{\\sigma_r}.\n\\]\nThis normalization places all reviews on a common scale in units of (reviewer specific) standard deviation (with mean \\(0\\) and standard deviation \\(1\\))."
+  },
+  {
+    "objectID": "index copy.html#final-score-per-intervention",
+    "href": "index copy.html#final-score-per-intervention",
+    "title": "Analysis of Reviews (standardized)",
+    "section": "Final score per intervention",
+    "text": "Final score per intervention\nEach intervention is reviewed by three reviewers. To get the overall score for an intervention, we take the average of the three reviewers’ weighted scores:\n\\[\n\\text{overall\\_score}_i = \\frac{1}{3} \\sum_{r=1}^{3} \\text{zscore}_{r,i}\n\\]"
+  },
+  {
+    "objectID": "index copy.html#top-20",
+    "href": "index copy.html#top-20",
+    "title": "Analysis of Reviews (standardized)",
+    "section": "Top 20",
+    "text": "Top 20\n\n\n\n\n\n\n\n\nFigure 2: Top 20 interventions, according to their overall score (the combined weighted averages of the three reviewers). The line shows the range of reviews, from the lowest to the highest of the three scores. In colors are the average scores (not weighted) of the category-specific ratings of the three reviewers."
+  },
+  {
+    "objectID": "index copy.html#by-reviewer",
+    "href": "index copy.html#by-reviewer",
+    "title": "Analysis of Reviews (standardized)",
+    "section": "By reviewer",
+    "text": "By reviewer\n\n\n\n\n\n\n\n\nFigure 3: Distribtions of reviewer scores (weighted averages of the different rating categories). Each dot corresponds to a review. Lines with dot in the middle (above the boxplots) represent the reviewer specific means and their 95% CIs."
+  },
+  {
+    "objectID": "index copy.html#by-content",
+    "href": "index copy.html#by-content",
+    "title": "Analysis of Reviews (standardized)",
+    "section": "By content",
+    "text": "By content\n\n\n\n\n\n\n\n\nFigure 4: Overall scores for interventions by content label. Each dot corresponds to an intervention. Lines with dot in the middle (above the boxplots) represent the specific means of the respective content labels, and their 95% CIs."
+  },
+  {
+    "objectID": "index copy.html#all",
+    "href": "index copy.html#all",
+    "title": "Analysis of Reviews (standardized)",
+    "section": "All",
+    "text": "All\n\n\n\n\n\n\n\n\nFigure 5: All interventions, according to their overall score (the combined weighted averages of the three reviewers). The line shows the range of reviews, from the lowest to the highest of the three scores. In colors are the the category-specific averages (not weighted) of the three reviewers."
+  },
+  {
+    "objectID": "data_explorer_comparison.html",
+    "href": "data_explorer_comparison.html",
+    "title": "Compare standardized and non-standardized rankings",
+    "section": "",
+    "text": "Note\n\n\n\nColumn names containing _std are based on standardized scores."
   },
   {
     "objectID": "data_explorer.html",
@@ -49,11 +147,11 @@
     "text": "Content\n\n\n\n\n(bi)partisan support\n\n\n\n\n\nhigh public trust\n\n\n\n\n\nimpact of climate science\n\n\n\n\n\nintrospection\n\n\n\n\n\nLLM\n\n\n\n\n\nother\n\n\n\n\n\nportrait\n\n\n\n\n\nscientific consensus\n\n\n\n\n\nscientific findings\n\n\n\n\n\nscientific practices\n\n\n\n\n\nscientists’ background\n\n\n\n\n\nscientists’ values/motivation\n\n\n\n\n\nthird party endorsement\n\n\n\n\n\n\nOverall score\n\n\n\n\nFlagged\n\n\n\n\nfictional (or so it seems)\n\n\n\n\n\nnot ready to use\n\n\n\n\n\nunrelated"
   },
   {
-    "objectID": "data_explorer_comparison.html",
-    "href": "data_explorer_comparison.html",
-    "title": "Compare standardized and non-standardized rankings",
+    "objectID": "data_explorer_non_standardized.html",
+    "href": "data_explorer_non_standardized.html",
+    "title": "Non-standardized ratings",
     "section": "",
-    "text": "Note\n\n\n\nColumn names containing _std are based on standardized scores."
+    "text": "Content\n\n\n\n\n(bi)partisan support\n\n\n\n\n\nhigh public trust\n\n\n\n\n\nimpact of climate science\n\n\n\n\n\nintrospection\n\n\n\n\n\nLLM\n\n\n\n\n\nother\n\n\n\n\n\nportrait\n\n\n\n\n\nscientific consensus\n\n\n\n\n\nscientific findings\n\n\n\n\n\nscientific practices\n\n\n\n\n\nscientists’ background\n\n\n\n\n\nscientists’ values/motivation\n\n\n\n\n\nthird party endorsement\n\n\n\n\n\n\nOverall score\n\n\n\n\nFlagged\n\n\n\n\nfictional (or so it seems)\n\n\n\n\n\nnot ready to use\n\n\n\n\n\nunrelated"
   },
   {
     "objectID": "index.html",
@@ -110,5 +208,12 @@
     "title": "Analysis of Reviews (standardized)",
     "section": "All",
     "text": "All\n\n\n\n\n\n\n\n\nFigure 5: All interventions, according to their overall score (the combined weighted averages of the three reviewers). The line shows the range of reviews, from the lowest to the highest of the three scores. In colors are the the category-specific averages (not weighted) of the three reviewers."
+  },
+  {
+    "objectID": "plenary_meeting.html",
+    "href": "plenary_meeting.html",
+    "title": "Plenary meeting for intervention selection",
+    "section": "",
+    "text": "Timeline\n\nGeneral points (~5mins)\n\n\nafterwards: summary\n\n\nGeneral points"
   }
 ]
