@@ -42,93 +42,107 @@
     "text": "Current idea\n\nIn general: only overall rating + if will be tested or not\nIn addition, to those in the top 20 and which are excluded, explanation regarding why"
   },
   {
-    "objectID": "index_non_standardized.html",
-    "href": "index_non_standardized.html",
-    "title": "Analysis of Reviews (non-standardized)",
+    "objectID": "data_explorer_non_standardized.html",
+    "href": "data_explorer_non_standardized.html",
+    "title": "Non-standardized ratings",
     "section": "",
-    "text": "Figure 1: Distribtions of weights assigned by the different reviewers, ordered by category.\n\n\n\n\nEach reviewer assigned a weight to each of the four evaluation criteria:\n\\[\n\\text{rating\\_vars} = [\\text{\"Theoretical grounding\"}, \\text{\"Theoretical insight\"}, \\text{\"Odds of success\"}, \\text{\"Practical relevance\"}]\n\\]\nFor each reviewer, we computed a weighted average score for each intervention they reviewed. based on their own specific weights. Let \\(w_{r,c}\\) be the weight reviewer \\(r\\) gives to criterion \\(c\\), and \\(x_{r,i,c}\\) be their rating for intervention i on that criterion. Then the review score is:\n\\[\n\\text{score}_{r,i} = \\frac{\\sum_{c \\in \\text{rating\\_vars}} w_{r,c} \\cdot x_{r,i,c}}{\\sum_{c \\in \\text{rating\\_vars}} w_{r,c}}\n\\]\nSince the weights all add up to 1, this simplifies to:\n\\[\n\\text{score}_{r,i} = \\sum_{c \\in \\text{rating\\_vars}} w_{r,c} \\cdot x_{r,i,c}.\n\\]\nEach intervention is reviewed by three reviewers. To get the overall score for an intervention, we take the average of the three reviewers’ weighted scores:\n\\[\n\\text{overall\\_score}_i = \\frac{1}{3} \\sum_{r=1}^{3} \\text{score}_{r,i}\n\\]\n\n\n\n\nTable 1: Weights assigned by the different reviewers.\n\n\n\n\n\n\nreviewer_id\nTheoretical Grounding\nTheoretical Insight\nOdds Of Success\nPractical Relevance\n\n\n\n\nB1\n0.250\n0.400\n0.150\n0.200\n\n\nB10\n0.167\n0.167\n0.333\n0.333\n\n\nB12\n0.300\n0.150\n0.300\n0.250\n\n\nB13\n0.150\n0.200\n0.400\n0.250\n\n\nB2\n0.300\n0.150\n0.400\n0.150\n\n\nB3\n0.200\n0.000\n0.400\n0.400\n\n\nB4\n0.200\n0.150\n0.300\n0.350\n\n\nB5\n0.100\n0.300\n0.300\n0.300\n\n\nB6\n0.250\n0.150\n0.100\n0.500\n\n\nB7\n0.250\n0.300\n0.300\n0.150\n\n\nB8\n0.250\n0.250\n0.250\n0.250\n\n\nB9\n0.250\n0.250\n0.250\n0.250"
+    "text": "Content\n\n\n\n\n(bi)partisan support\n\n\n\n\n\nhigh public trust\n\n\n\n\n\nimpact of climate science\n\n\n\n\n\nintrospection\n\n\n\n\n\nLLM\n\n\n\n\n\nother\n\n\n\n\n\nportrait\n\n\n\n\n\nscientific consensus\n\n\n\n\n\nscientific findings\n\n\n\n\n\nscientific practices\n\n\n\n\n\nscientists’ background\n\n\n\n\n\nscientists’ values/motivation\n\n\n\n\n\nthird party endorsement\n\n\n\n\n\n\nOverall score\n\n\n\n\nFlagged\n\n\n\n\nfictional (or so it seems)\n\n\n\n\n\nnot ready to use\n\n\n\n\n\nunrelated"
   },
   {
-    "objectID": "index_non_standardized.html#top-20",
-    "href": "index_non_standardized.html#top-20",
-    "title": "Analysis of Reviews (non-standardized)",
-    "section": "Top 20",
-    "text": "Top 20\n\n\n\n\n\n\n\n\nFigure 2: Top 20 interventions, according to their overall score (the combined weighted averages of the three reviewers). The line shows the range of reviews, from the lowest to the highest of the three scores. In colors are the average scores (not weighted) of the category-specific ratings of the three reviewers."
+    "objectID": "data_explorer.html",
+    "href": "data_explorer.html",
+    "title": "Standardized ratings",
+    "section": "",
+    "text": "Content\n\n\n\n\n(bi)partisan support\n\n\n\n\n\nhigh public trust\n\n\n\n\n\nimpact of climate science\n\n\n\n\n\nintrospection\n\n\n\n\n\nLLM\n\n\n\n\n\nother\n\n\n\n\n\nportrait\n\n\n\n\n\nscientific consensus\n\n\n\n\n\nscientific findings\n\n\n\n\n\nscientific practices\n\n\n\n\n\nscientists’ background\n\n\n\n\n\nscientists’ values/motivation\n\n\n\n\n\nthird party endorsement\n\n\n\n\n\n\nOverall score\n\n\n\n\nFlagged\n\n\n\n\nfictional (or so it seems)\n\n\n\n\n\nnot ready to use\n\n\n\n\n\nunrelated"
   },
   {
-    "objectID": "index_non_standardized.html#by-reviewer",
-    "href": "index_non_standardized.html#by-reviewer",
-    "title": "Analysis of Reviews (non-standardized)",
-    "section": "By reviewer",
-    "text": "By reviewer\n\n\n\n\n\n\n\n\nFigure 3: Distribtions of reviewer scores (weighted averages of the different rating categories). Each dot corresponds to a review. Lines with dot in the middle (above the boxplots) represent the reviewer specific means and their 95% CIs."
-  },
-  {
-    "objectID": "index_non_standardized.html#by-content",
-    "href": "index_non_standardized.html#by-content",
-    "title": "Analysis of Reviews (non-standardized)",
-    "section": "By content",
-    "text": "By content\n\n\n\n\n\n\n\n\nFigure 4: Overall scores for interventions by content label. Each dot corresponds to an intervention. Lines with dot in the middle (above the boxplots) represent the specific means of the respective content labels, and their 95% CIs."
-  },
-  {
-    "objectID": "index_non_standardized.html#all",
-    "href": "index_non_standardized.html#all",
-    "title": "Analysis of Reviews (non-standardized)",
-    "section": "All",
-    "text": "All\n\n\n\n\n\n\n\n\nFigure 5: All interventions, according to their overall score (the combined weighted averages of the three reviewers). The line shows the range of reviews, from the lowest to the highest of the three scores. In colors are the the category-specific averages (not weighted) of the three reviewers."
-  },
-  {
-    "objectID": "index copy.html",
-    "href": "index copy.html",
+    "objectID": "analysis.html",
+    "href": "analysis.html",
     "title": "Analysis of Reviews (standardized)",
     "section": "",
     "text": "Figure 1: Distribtions of weights assigned by the different reviewers, ordered by category.\n\n\n\n\n\n\n\n\nTable 1: Weights assigned by the different reviewers.\n\n\n\n\n\n\nreviewer_id\nTheoretical Grounding\nTheoretical Insight\nOdds Of Success\nPractical Relevance\n\n\n\n\nB1\n0.250\n0.400\n0.150\n0.200\n\n\nB10\n0.167\n0.167\n0.333\n0.333\n\n\nB12\n0.300\n0.150\n0.300\n0.250\n\n\nB13\n0.150\n0.200\n0.400\n0.250\n\n\nB2\n0.300\n0.150\n0.400\n0.150\n\n\nB3\n0.200\n0.000\n0.400\n0.400\n\n\nB4\n0.200\n0.150\n0.300\n0.350\n\n\nB5\n0.100\n0.300\n0.300\n0.300\n\n\nB6\n0.250\n0.150\n0.100\n0.500\n\n\nB7\n0.250\n0.300\n0.300\n0.150\n\n\nB8\n0.250\n0.250\n0.250\n0.250\n\n\nB9\n0.250\n0.250\n0.250\n0.250"
   },
   {
-    "objectID": "index copy.html#weighted-reviewer-scores",
-    "href": "index copy.html#weighted-reviewer-scores",
+    "objectID": "analysis.html#weighted-reviewer-scores",
+    "href": "analysis.html#weighted-reviewer-scores",
     "title": "Analysis of Reviews (standardized)",
     "section": "Weighted reviewer scores",
     "text": "Weighted reviewer scores\nEach reviewer assigned a weight to each of the four evaluation criteria:\n\\[\n\\text{rating\\_vars} = [\\text{\"Theoretical grounding\"}, \\text{\"Theoretical insight\"}, \\text{\"Odds of success\"}, \\text{\"Practical relevance\"}]\n\\]\nFor each reviewer, we computed a weighted average score for each intervention they reviewed. based on their own specific weights. Let \\(w_{r,c}\\) be the weight reviewer \\(r\\) gives to criterion \\(c\\), and \\(x_{r,i,c}\\) be their rating for intervention i on that criterion. Then the review score is:\n\\[\n\\text{score}_{r,i} = \\frac{\\sum_{c \\in \\text{rating\\_vars}} w_{r,c} \\cdot x_{r,i,c}}{\\sum_{c \\in \\text{rating\\_vars}} w_{r,c}}\n\\]\nSince the weights all add up to 1, this simplifies to:\n\\[\n\\text{score}_{r,i} = \\sum_{c \\in \\text{rating\\_vars}} w_{r,c} \\cdot x_{r,i,c}\n\\]"
   },
   {
-    "objectID": "index copy.html#standardization",
-    "href": "index copy.html#standardization",
+    "objectID": "analysis.html#standardization",
+    "href": "analysis.html#standardization",
     "title": "Analysis of Reviews (standardized)",
     "section": "Standardization",
     "text": "Standardization\nReviewers tend to use the rating scales differently: some use the whole scale, some use a narrow band; some generally assign higher scores, some generally lower scores. We therefore standardize the reviewer’s scores by z_scoring them. Let: \\(\\text{score}_{r,i}\\) be the weighted score reviewer \\(r\\) assigned to intervention \\(i\\), \\(\\mu_r\\) be the mean of reviewer \\(r\\)’s scores across all interventions they rated, \\(\\sigma_r\\) be the standard deviation of reviewer \\(r\\)’s scores.\nThen the standardized score is:\n\\[\n\\text{zscore}_{r,i}\n= \\frac{\\text{score}_{r,i} - \\mu_r}{\\sigma_r}.\n\\]\nThis normalization places all reviews on a common scale in units of (reviewer specific) standard deviation (with mean \\(0\\) and standard deviation \\(1\\))."
   },
   {
-    "objectID": "index copy.html#final-score-per-intervention",
-    "href": "index copy.html#final-score-per-intervention",
+    "objectID": "analysis.html#final-score-per-intervention",
+    "href": "analysis.html#final-score-per-intervention",
     "title": "Analysis of Reviews (standardized)",
     "section": "Final score per intervention",
     "text": "Final score per intervention\nEach intervention is reviewed by three reviewers. To get the overall score for an intervention, we take the average of the three reviewers’ weighted scores:\n\\[\n\\text{overall\\_score}_i = \\frac{1}{3} \\sum_{r=1}^{3} \\text{zscore}_{r,i}\n\\]"
   },
   {
-    "objectID": "index copy.html#top-20",
-    "href": "index copy.html#top-20",
+    "objectID": "analysis.html#top-20",
+    "href": "analysis.html#top-20",
     "title": "Analysis of Reviews (standardized)",
     "section": "Top 20",
     "text": "Top 20\n\n\n\n\n\n\n\n\nFigure 2: Top 20 interventions, according to their overall score (the combined weighted averages of the three reviewers). The line shows the range of reviews, from the lowest to the highest of the three scores. In colors are the average scores (not weighted) of the category-specific ratings of the three reviewers."
   },
   {
-    "objectID": "index copy.html#by-reviewer",
-    "href": "index copy.html#by-reviewer",
+    "objectID": "analysis.html#by-reviewer",
+    "href": "analysis.html#by-reviewer",
     "title": "Analysis of Reviews (standardized)",
     "section": "By reviewer",
     "text": "By reviewer\n\n\n\n\n\n\n\n\nFigure 3: Distribtions of reviewer scores (weighted averages of the different rating categories). Each dot corresponds to a review. Lines with dot in the middle (above the boxplots) represent the reviewer specific means and their 95% CIs."
   },
   {
-    "objectID": "index copy.html#by-content",
-    "href": "index copy.html#by-content",
+    "objectID": "analysis.html#by-content",
+    "href": "analysis.html#by-content",
     "title": "Analysis of Reviews (standardized)",
     "section": "By content",
     "text": "By content\n\n\n\n\n\n\n\n\nFigure 4: Overall scores for interventions by content label. Each dot corresponds to an intervention. Lines with dot in the middle (above the boxplots) represent the specific means of the respective content labels, and their 95% CIs."
   },
   {
-    "objectID": "index copy.html#all",
-    "href": "index copy.html#all",
+    "objectID": "analysis.html#all",
+    "href": "analysis.html#all",
     "title": "Analysis of Reviews (standardized)",
+    "section": "All",
+    "text": "All\n\n\n\n\n\n\n\n\nFigure 5: All interventions, according to their overall score (the combined weighted averages of the three reviewers). The line shows the range of reviews, from the lowest to the highest of the three scores. In colors are the the category-specific averages (not weighted) of the three reviewers."
+  },
+  {
+    "objectID": "analysis_non_standardized.html",
+    "href": "analysis_non_standardized.html",
+    "title": "Analysis of Reviews (non-standardized)",
+    "section": "",
+    "text": "Figure 1: Distribtions of weights assigned by the different reviewers, ordered by category.\n\n\n\n\nEach reviewer assigned a weight to each of the four evaluation criteria:\n\\[\n\\text{rating\\_vars} = [\\text{\"Theoretical grounding\"}, \\text{\"Theoretical insight\"}, \\text{\"Odds of success\"}, \\text{\"Practical relevance\"}]\n\\]\nFor each reviewer, we computed a weighted average score for each intervention they reviewed. based on their own specific weights. Let \\(w_{r,c}\\) be the weight reviewer \\(r\\) gives to criterion \\(c\\), and \\(x_{r,i,c}\\) be their rating for intervention i on that criterion. Then the review score is:\n\\[\n\\text{score}_{r,i} = \\frac{\\sum_{c \\in \\text{rating\\_vars}} w_{r,c} \\cdot x_{r,i,c}}{\\sum_{c \\in \\text{rating\\_vars}} w_{r,c}}\n\\]\nSince the weights all add up to 1, this simplifies to:\n\\[\n\\text{score}_{r,i} = \\sum_{c \\in \\text{rating\\_vars}} w_{r,c} \\cdot x_{r,i,c}.\n\\]\nEach intervention is reviewed by three reviewers. To get the overall score for an intervention, we take the average of the three reviewers’ weighted scores:\n\\[\n\\text{overall\\_score}_i = \\frac{1}{3} \\sum_{r=1}^{3} \\text{score}_{r,i}\n\\]\n\n\n\n\nTable 1: Weights assigned by the different reviewers.\n\n\n\n\n\n\nreviewer_id\nTheoretical Grounding\nTheoretical Insight\nOdds Of Success\nPractical Relevance\n\n\n\n\nB1\n0.250\n0.400\n0.150\n0.200\n\n\nB10\n0.167\n0.167\n0.333\n0.333\n\n\nB12\n0.300\n0.150\n0.300\n0.250\n\n\nB13\n0.150\n0.200\n0.400\n0.250\n\n\nB2\n0.300\n0.150\n0.400\n0.150\n\n\nB3\n0.200\n0.000\n0.400\n0.400\n\n\nB4\n0.200\n0.150\n0.300\n0.350\n\n\nB5\n0.100\n0.300\n0.300\n0.300\n\n\nB6\n0.250\n0.150\n0.100\n0.500\n\n\nB7\n0.250\n0.300\n0.300\n0.150\n\n\nB8\n0.250\n0.250\n0.250\n0.250\n\n\nB9\n0.250\n0.250\n0.250\n0.250"
+  },
+  {
+    "objectID": "analysis_non_standardized.html#top-20",
+    "href": "analysis_non_standardized.html#top-20",
+    "title": "Analysis of Reviews (non-standardized)",
+    "section": "Top 20",
+    "text": "Top 20\n\n\n\n\n\n\n\n\nFigure 2: Top 20 interventions, according to their overall score (the combined weighted averages of the three reviewers). The line shows the range of reviews, from the lowest to the highest of the three scores. In colors are the average scores (not weighted) of the category-specific ratings of the three reviewers."
+  },
+  {
+    "objectID": "analysis_non_standardized.html#by-reviewer",
+    "href": "analysis_non_standardized.html#by-reviewer",
+    "title": "Analysis of Reviews (non-standardized)",
+    "section": "By reviewer",
+    "text": "By reviewer\n\n\n\n\n\n\n\n\nFigure 3: Distribtions of reviewer scores (weighted averages of the different rating categories). Each dot corresponds to a review. Lines with dot in the middle (above the boxplots) represent the reviewer specific means and their 95% CIs."
+  },
+  {
+    "objectID": "analysis_non_standardized.html#by-content",
+    "href": "analysis_non_standardized.html#by-content",
+    "title": "Analysis of Reviews (non-standardized)",
+    "section": "By content",
+    "text": "By content\n\n\n\n\n\n\n\n\nFigure 4: Overall scores for interventions by content label. Each dot corresponds to an intervention. Lines with dot in the middle (above the boxplots) represent the specific means of the respective content labels, and their 95% CIs."
+  },
+  {
+    "objectID": "analysis_non_standardized.html#all",
+    "href": "analysis_non_standardized.html#all",
+    "title": "Analysis of Reviews (non-standardized)",
     "section": "All",
     "text": "All\n\n\n\n\n\n\n\n\nFigure 5: All interventions, according to their overall score (the combined weighted averages of the three reviewers). The line shows the range of reviews, from the lowest to the highest of the three scores. In colors are the the category-specific averages (not weighted) of the three reviewers."
   },
@@ -140,107 +154,30 @@
     "text": "Note\n\n\n\nColumn names containing _std are based on standardized scores."
   },
   {
-    "objectID": "data_explorer.html",
-    "href": "data_explorer.html",
-    "title": "Standardized ratings",
-    "section": "",
-    "text": "Content\n\n\n\n\n(bi)partisan support\n\n\n\n\n\nhigh public trust\n\n\n\n\n\nimpact of climate science\n\n\n\n\n\nintrospection\n\n\n\n\n\nLLM\n\n\n\n\n\nother\n\n\n\n\n\nportrait\n\n\n\n\n\nscientific consensus\n\n\n\n\n\nscientific findings\n\n\n\n\n\nscientific practices\n\n\n\n\n\nscientists’ background\n\n\n\n\n\nscientists’ values/motivation\n\n\n\n\n\nthird party endorsement\n\n\n\n\n\n\nOverall score\n\n\n\n\nFlagged\n\n\n\n\nfictional (or so it seems)\n\n\n\n\n\nnot ready to use\n\n\n\n\n\nunrelated"
-  },
-  {
-    "objectID": "data_explorer_non_standardized.html",
-    "href": "data_explorer_non_standardized.html",
-    "title": "Non-standardized ratings",
-    "section": "",
-    "text": "Content\n\n\n\n\n(bi)partisan support\n\n\n\n\n\nhigh public trust\n\n\n\n\n\nimpact of climate science\n\n\n\n\n\nintrospection\n\n\n\n\n\nLLM\n\n\n\n\n\nother\n\n\n\n\n\nportrait\n\n\n\n\n\nscientific consensus\n\n\n\n\n\nscientific findings\n\n\n\n\n\nscientific practices\n\n\n\n\n\nscientists’ background\n\n\n\n\n\nscientists’ values/motivation\n\n\n\n\n\nthird party endorsement\n\n\n\n\n\n\nOverall score\n\n\n\n\nFlagged\n\n\n\n\nfictional (or so it seems)\n\n\n\n\n\nnot ready to use\n\n\n\n\n\nunrelated"
-  },
-  {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Analysis of Reviews (standardized)",
+    "title": "Selection (preliminary)",
     "section": "",
-    "text": "Figure 1: Distribtions of weights assigned by the different reviewers, ordered by category.\n\n\n\n\n\n\n\n\nTable 1: Weights assigned by the different reviewers.\n\n\n\n\n\n\nreviewer_id\nTheoretical Grounding\nTheoretical Insight\nOdds Of Success\nPractical Relevance\n\n\n\n\nB1\n0.250\n0.400\n0.150\n0.200\n\n\nB10\n0.167\n0.167\n0.333\n0.333\n\n\nB12\n0.300\n0.150\n0.300\n0.250\n\n\nB13\n0.150\n0.200\n0.400\n0.250\n\n\nB2\n0.300\n0.150\n0.400\n0.150\n\n\nB3\n0.200\n0.000\n0.400\n0.400\n\n\nB4\n0.200\n0.150\n0.300\n0.350\n\n\nB5\n0.100\n0.300\n0.300\n0.300\n\n\nB6\n0.250\n0.150\n0.100\n0.500\n\n\nB7\n0.250\n0.300\n0.300\n0.150\n\n\nB8\n0.250\n0.250\n0.250\n0.250\n\n\nB9\n0.250\n0.250\n0.250\n0.250"
+    "text": "We will be able to test 20 interventions in our megastudy. The research team has made preliminary decisions on which intervention proposals to select. We would like to give you the opportunity to challenge these decisions (or support them, if you agree).\nWe used the (standardized) aggregate scores from your individual reviews as a baseline: by default, the interventions that made it into the top 20 will be selected for testing.\nHowever, screening the reviews and the top 20, the research team has set additional inclusion criteria, which not all interventions in the top 20 met."
   },
   {
-    "objectID": "index.html#weighted-reviewer-scores",
-    "href": "index.html#weighted-reviewer-scores",
-    "title": "Analysis of Reviews (standardized)",
-    "section": "Weighted reviewer scores",
-    "text": "Weighted reviewer scores\nEach reviewer assigned a weight to each of the four evaluation criteria:\n\\[\n\\text{rating\\_vars} = [\\text{\"Theoretical grounding\"}, \\text{\"Theoretical insight\"}, \\text{\"Odds of success\"}, \\text{\"Practical relevance\"}]\n\\]\nFor each reviewer, we computed a weighted average score for each intervention they reviewed. based on their own specific weights. Let \\(w_{r,c}\\) be the weight reviewer \\(r\\) gives to criterion \\(c\\), and \\(x_{r,i,c}\\) be their rating for intervention i on that criterion. Then the review score is:\n\\[\n\\text{score}_{r,i} = \\frac{\\sum_{c \\in \\text{rating\\_vars}} w_{r,c} \\cdot x_{r,i,c}}{\\sum_{c \\in \\text{rating\\_vars}} w_{r,c}}\n\\]\nSince the weights all add up to 1, this simplifies to:\n\\[\n\\text{score}_{r,i} = \\sum_{c \\in \\text{rating\\_vars}} w_{r,c} \\cdot x_{r,i,c}\n\\]"
-  },
-  {
-    "objectID": "index.html#standardization",
-    "href": "index.html#standardization",
-    "title": "Analysis of Reviews (standardized)",
-    "section": "Standardization",
-    "text": "Standardization\nReviewers tend to use the rating scales differently: some use the whole scale, some use a narrow band; some generally assign higher scores, some generally lower scores. We therefore standardize the reviewer’s scores by z_scoring them. Let: \\(\\text{score}_{r,i}\\) be the weighted score reviewer \\(r\\) assigned to intervention \\(i\\), \\(\\mu_r\\) be the mean of reviewer \\(r\\)’s scores across all interventions they rated, \\(\\sigma_r\\) be the standard deviation of reviewer \\(r\\)’s scores.\nThen the standardized score is:\n\\[\n\\text{zscore}_{r,i}\n= \\frac{\\text{score}_{r,i} - \\mu_r}{\\sigma_r}.\n\\]\nThis normalization places all reviews on a common scale in units of (reviewer specific) standard deviation (with mean \\(0\\) and standard deviation \\(1\\))."
-  },
-  {
-    "objectID": "index.html#final-score-per-intervention",
-    "href": "index.html#final-score-per-intervention",
-    "title": "Analysis of Reviews (standardized)",
-    "section": "Final score per intervention",
-    "text": "Final score per intervention\nEach intervention is reviewed by three reviewers. To get the overall score for an intervention, we take the average of the three reviewers’ weighted scores:\n\\[\n\\text{overall\\_score}_i = \\frac{1}{3} \\sum_{r=1}^{3} \\text{zscore}_{r,i}\n\\]"
-  },
-  {
-    "objectID": "index.html#top-20",
-    "href": "index.html#top-20",
-    "title": "Analysis of Reviews (standardized)",
-    "section": "Top 20",
-    "text": "Top 20\n\n\n\n\n\n\n\n\nFigure 2: Top 20 interventions, according to their overall score (the combined weighted averages of the three reviewers). The line shows the range of reviews, from the lowest to the highest of the three scores. In colors are the average scores (not weighted) of the category-specific ratings of the three reviewers."
-  },
-  {
-    "objectID": "index.html#by-reviewer",
-    "href": "index.html#by-reviewer",
-    "title": "Analysis of Reviews (standardized)",
-    "section": "By reviewer",
-    "text": "By reviewer\n\n\n\n\n\n\n\n\nFigure 3: Distribtions of reviewer scores (weighted averages of the different rating categories). Each dot corresponds to a review. Lines with dot in the middle (above the boxplots) represent the reviewer specific means and their 95% CIs."
-  },
-  {
-    "objectID": "index.html#by-content",
-    "href": "index.html#by-content",
-    "title": "Analysis of Reviews (standardized)",
-    "section": "By content",
-    "text": "By content\n\n\n\n\n\n\n\n\nFigure 4: Overall scores for interventions by content label. Each dot corresponds to an intervention. Lines with dot in the middle (above the boxplots) represent the specific means of the respective content labels, and their 95% CIs."
-  },
-  {
-    "objectID": "index.html#all",
-    "href": "index.html#all",
-    "title": "Analysis of Reviews (standardized)",
-    "section": "All",
-    "text": "All\n\n\n\n\n\n\n\n\nFigure 5: All interventions, according to their overall score (the combined weighted averages of the three reviewers). The line shows the range of reviews, from the lowest to the highest of the three scores. In colors are the the category-specific averages (not weighted) of the three reviewers."
-  },
-  {
-    "objectID": "plenary_meeting.html",
-    "href": "plenary_meeting.html",
-    "title": "Plenary meeting for intervention selection",
-    "section": "",
-    "text": "Timeline\n\nGeneral points (~5mins)\n\n\nafterwards: summary\n\n\nGeneral points"
-  },
-  {
-    "objectID": "final_ranking.html",
-    "href": "final_ranking.html",
-    "title": "Final selection",
-    "section": "",
-    "text": "We will be able to test 20 interventions in our study. The research team has made pre-final decisions on which intervention proposals to select. We would like to give you the opportunity to challenge these decisions (or support them, if you agree).\nWe used the aggregate scores from your individual reviews as a baseline: by default, the interventions that made it into the top 20 will be selected for testing.\nHowever, screening the reviews and the top 20, the research team has set additional inclusion criteria, which not all interventions in the top 20 met."
-  },
-  {
-    "objectID": "final_ranking.html#inclusion-criteria",
-    "href": "final_ranking.html#inclusion-criteria",
-    "title": "Final selection",
+    "objectID": "index.html#inclusion-criteria",
+    "href": "index.html#inclusion-criteria",
+    "title": "Selection (preliminary)",
     "section": "Inclusion criteria",
-    "text": "Inclusion criteria\n\nNo fictional characters\n\nSeveral interventions use fictional scientists, journals, or scientific communities. It is hard to anticipate if these interventions will become practically relevant. Further, they require that we debrief participants after the intervention, for ethical reasons. This is problematic for the second, follow-up study: we will likely not be able to detect an effect, or worse, even find negative long-term effects if we invent facts on climate scientists.\n\nDiversity\n\nIdeally, we want to test a wide range of different interventions. With similar interventions, we used two strategies to avoid redundancy: When there were complementary elements, we suggest merging (and offer co-authorship to all involved teams). When two interventions were essentially the same, we picked the one that was better ranked.\n\nMajor concerns on effectiveness\n\nWe suggest excluding one intervention, because we believe it is too unrelated to our outcome variable, trust in climate scientists. In another case, we justified exclusions with major concerns stated in one of the reviewer comments (but in this case, a similar, and higher-ranked intervention is already included)."
+    "text": "Inclusion criteria\n\nNo fictional characters\n\nSeveral interventions use fictional scientists, journals, or scientific communities. It is hard to anticipate if these interventions will become practically relevant. Further, they require that we debrief participants after the intervention, for ethical reasons. This is problematic for the follow-up study: we will likely not have persistent effects from fictional interventions, or worse, we might even find negative long-term effects if participants felt we were just making things up.\n\nDiversity\n\nIdeally, we want to test a wide range of different interventions. With similar interventions, we used two strategies to avoid redundancy: When there were complementary elements, we suggested merging (and we will offer co-authorship to all involved teams). When two interventions were essentially the same, we picked the one that was better ranked.\n\nMajor concerns on effectiveness\n\nWe suggest excluding one intervention, because we believe it is too unrelated to our outcome variable, trust in climate scientists. In another case, we justified exclusions with major concerns stated in one of the reviewer comments (but in this case, in addition, a similar and higher-ranked intervention was already included)."
   },
   {
-    "objectID": "final_ranking.html#selection-decisions-pre-final",
-    "href": "final_ranking.html#selection-decisions-pre-final",
-    "title": "Final selection",
-    "section": "Selection decisions (pre-final)",
-    "text": "Selection decisions (pre-final)\nTable 1 provides a summary, and Table 2 lists all decisions as proposed by the research team. These decisions are not final.\n\n\n\n\nTable 1: Summary table\n\n\n\n\n\n\ndecision\nn\n\n\n\n\n✅ Keep\n11\n\n\n✏️ Adapt\n7\n\n\n❌ Remove\n14\n\n\n🔀 Merge\n3\n\n\n\n\n\n\n\n\n\n\n\n\nTable 2: Detailed table with all decisions"
+    "objectID": "index.html#selection",
+    "href": "index.html#selection",
+    "title": "Selection (preliminary)",
+    "section": "Selection",
+    "text": "Selection\nTable 1 provides a summary, and Table 2 lists all decisions as proposed by the research team. These decisions are not final.\n\n\n\n\nTable 1: Summary table\n\n\n\n\n\n\ndecision\nn\n\n\n\n\n✅ Keep\n11\n\n\n✏️ Adapt\n7\n\n\n❌ Remove\n14\n\n\n🔀 Merge\n3\n\n\n\n\n\n\n\n\n\n\n\n\nTable 2: Detailed table with all decisions"
   },
   {
-    "objectID": "final_ranking.html#content-diversity",
-    "href": "final_ranking.html#content-diversity",
-    "title": "Final selection",
+    "objectID": "index.html#content-diversity",
+    "href": "index.html#content-diversity",
+    "title": "Selection (preliminary)",
     "section": "Content diversity",
     "text": "Content diversity\nA note on content diversity: As shown in Table 3, the current selection covers most of the (very rough) content labels we had originally assigned.\n\n\n\n\nTable 3: Overview of how the different content labels are represented in the selection\n\n\n\n\n\n\nintervention_content\nnot_selected\nselected\n\n\n\n\n(bi)partisan support\n7\n0\n\n\nLLM\n5\n3\n\n\nhigh public trust\n2\n1\n\n\nimpact of climate science\n3\n4\n\n\nintrospection\n7\n1\n\n\nother\n5\n2\n\n\nportrait\n13\n1\n\n\nscientific consensus\n1\n1\n\n\nscientific findings\n6\n3\n\n\nscientific practices\n24\n2\n\n\nscientists’ background\n4\n1\n\n\nscientists’ values/motivation\n7\n0\n\n\nthird party endorsement\n0\n2"
   }

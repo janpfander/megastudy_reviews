@@ -1,7 +1,6 @@
 ---
-title: "Analysis of Reviews (standardized)"
-subtitle: "Strengthening Trust in Climate Scientists Megastudy"
-#self-contained: true
+title: "Selection (preliminary)"
+link-external-newwindow: true
 ---
 
 ```{r setup}
@@ -16,7 +15,6 @@ library(reactable)
 library(crosstalk)
 library(gghalves)
 library(plotly)
-library(wesanderson)
 ```
 
 ```{r functions}
@@ -25,566 +23,273 @@ source("R/functions.R")
 
 ```{r}
 # read reviews
-reviews_long <- read_csv("reviews/reviews_long.csv")
-reviews_wide <- read_csv("reviews/reviews_wide.csv")
+reviews_wide <- read_csv("reviews/reviews_wide.csv") |> 
+  select(
+    code_name,
+    overall_std_score,
+    reviewer_comments_1,
+    reviewer_comments_2,
+    reviewer_comments_3,
+    description,
+    stimulus,
+    tested,
+    outcome_previous_tests,
+    effective,
+    effect_size,
+    citation,
+    comment
+  ) |> 
+  # make this order the default
+  arrange(desc(overall_std_score)) |> 
+  mutate(
+    ranking_std = min_rank(desc(overall_std_score))
+  ) |> 
+  select(-overall_std_score)
+
+# read screening sheet with decisions
+reviews_screening <- read_csv("reviews/review_screening_viktoria_jan.csv") |> 
+  # change some variables
+  mutate(
+    decision = case_when(
+      decision == "remove" ~ "❌ Remove",
+      decision == "merge"  ~ paste0("🔀 Merge with: ", similar_to),
+      decision == "adapt"  ~ "✏️ Adapt",
+      TRUE                     ~ "✅ Keep"),
+    selected = ifelse(
+      str_detect(decision, "Remove"), 
+      NA_character_,
+      "selected")
+  ) 
+
+# combine both with reduced variables
+reviews_decisions <- reviews_screening |> 
+  select(
+    - rank_new, 
+    - rank_old, 
+    - selected,
+    - similar_to
+  ) |> 
+  left_join(reviews_wide) |> 
+  select(code_name, ranking_std, decision, everything())
+
 ```
 
-# Weights
+We will be able to test 20 interventions in our megastudy. The research team has made preliminary decisions on which intervention proposals to select. We would like to give you the opportunity to challenge these decisions (or support them, if you agree). 
+
+We used the (standardized) aggregate scores from your individual reviews as a baseline: by default, the interventions that made it into the top 20 will be selected for testing. 
+
+However, screening the reviews and the top 20, the research team has set additional inclusion criteria, which not all interventions in the top 20 met. 
+
+::: {.callout-important}
+We encourage you to raise concerns regarding our preliminary selection decisions.
+
+Please use this [📄 google doc](https://docs.google.com/document/d/1RHu_dxYxn8zbfo1F3EAVPXYJ7eB6gA7ZeejHZwLXkv0/edit?tab=t.0) 
+
+Please also feel free to use the data explorer to see if there are other interventions that you would really like to see included (e.g. for reasons of diversity or novelty). If that is the case please send me an email (janlukas.pfaender@gmail.com).
+
+You have time to provide feedback **until January 5, 2026**.
+
+Thank you!!
+:::
+
+## Inclusion criteria
+
+1. No fictional characters
+
+Several interventions use fictional scientists, journals, or scientific communities. It is hard to anticipate if these interventions will become practically relevant. Further, they require that we debrief participants after the intervention, for ethical reasons. This is problematic for the follow-up study: we will likely not have persistent effects from fictional interventions, or worse, we might even find negative long-term effects if participants felt we were just making things up. 
+
+2. Diversity 
+
+Ideally, we want to test a wide range of different interventions. With similar interventions, we used two strategies to avoid redundancy: When there were complementary elements, we suggested merging (and we will offer co-authorship to all involved teams). When two interventions were essentially the same, we picked the one that was better ranked. 
+  
+3. Major concerns on effectiveness
+
+We suggest excluding one intervention, because we believe it is too unrelated to our outcome variable, trust in climate scientists. In another case, we justified exclusions with major concerns stated in one of the reviewer comments (but in this case, in addition, a similar and higher-ranked intervention was already included). 
+
+## Selection
+
+@tbl-summary provides a summary, and @tbl-detail lists all decisions as proposed by the research team. These decisions are not final. 
 
 ```{r}
-# get weights from the review data
-weights <- reviews_long |> 
-  group_by(reviewer_id) |> 
-  summarise(across(ends_with("weight"), ~ unique(.x)))
+#| label: tbl-summary
+#| tbl-cap: "Summary table" 
 
-# check
-# weights
+reviews_decisions |> 
+  mutate(decision = if_else(
+    str_detect(decision, "Merge"),
+    "🔀 Merge",
+    decision
+  )) |> 
+  group_by(decision) |> 
+  summarise(n = n_distinct(code_name), .groups = "drop") |> 
+  kbl(align = "c") |> 
+  kableExtra::kable_styling(position = "center")
 
-# make long format version
-weights_long <- weights |> 
-  pivot_longer(
-    cols = ends_with("weight"),
-    names_to = "category",
-    values_to = "weight"
-  ) |> 
-  mutate(
-    category = str_replace(category, "_weight", ""),
-    category = str_replace_all(category, "_", " ") |> str_to_title()
+```
+
+
+```{r}
+#| label: tbl-detail
+#| tbl-cap: "Detailed table with all decisions" 
+# The reactable table is inspired by this https://github.com/askozyreva/toolbox/blob/main/analysis/table_evidence.Rmd
+# https://interventionstoolbox.mpib-berlin.mpg.de/table_evidence.html
+#| tbl-align: left
+
+# the package and examples can be found here: https://glin.github.io/reactable/index.html
+
+
+htmltools::tags$style("
+  .details-box, .detail-text {
+    white-space: pre-wrap;
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
+  }
+")
+
+data <- SharedData$new(
+  reviews_decisions 
+)
+
+
+
+# get all details into row details
+row_details <- function(index) {
+  df <- data$data()        # extract underlying data frame
+  row <- df[index, , drop = FALSE]
+
+field <- function(label, value) {
+  if (is.null(value) || is.na(value) || value == "") return(NULL)
+
+  htmltools::tagList(
+    # Header
+    htmltools::div(
+      style = "
+        font-weight: 600;
+        margin-top: 10px;
+        color: #333;
+        font-size: 0.95rem;
+      ",
+      label
+    ),
+
+    # Body text
+    htmltools::pre(
+      style = "
+        margin-left: 12px;
+        margin-top: 2px;
+        margin-bottom: 10px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        font-size: 0.9rem;
+      ",
+      value
+    )
+  )
+}
+
+  htmltools::div(
+    class = "details-box",
+    field("Decision notes", row$screening_notes),
+    field("Intervention content", row$content),
+    field("Reviewer comments — reviewer 1", row$reviewer_comments_1),
+    field("Reviewer comments — reviewer 2", row$reviewer_comments_2),
+    field("Reviewer comments — reviewer 3", row$reviewer_comments_3),
+    field("Description", row$description),
+    field("Stimulus", row$stimulus),
+    field("Tested before?", row$tested), 
+    field("Outcome previous test", row$outcome_previous_tests), 
+    field("Effective?", row$effective), 
+    field("Effect size", row$effect_size),
+    field("Citation", row$citation),
+    field("Comment", row$comment)
+  )
+}
+
+
+reactable_data <- reactable(
+  data,
+  details = row_details,
+  pagination = FALSE,
+  columns = list(
+    code_name = colDef(
+      sticky = "left",
+      style = list(borderRight = "1px solid #eee"),
+      headerStyle = list(borderRight = "1px solid #eee")
+    ),
+    screening_notes = colDef(show = FALSE),
+    content = colDef(show = FALSE),
+    description = colDef(show = FALSE),
+    stimulus = colDef(show = FALSE),
+    reviewer_comments_1 = colDef(show = FALSE),
+    reviewer_comments_2 = colDef(show = FALSE),
+    reviewer_comments_3 = colDef(show = FALSE),
+    tested = colDef(show = FALSE),
+    outcome_previous_tests = colDef(show = FALSE),
+    effective = colDef(show = FALSE),
+    effect_size = colDef(show = FALSE),
+    citation = colDef(show = FALSE), 
+    comment = colDef(show = FALSE)
+  ),
+  searchable = TRUE,
+  elementId = "reviews-table"
+)
+
+# produce table
+htmltools::div(
+  style = "text-align: left;",
+  reactable_data
+)
+```
+
+```{r}
+# generate a table to copy paste in word document
+
+# reviews_decisions |> 
+#   mutate(concerns = NA_character_) |> 
+#   select(code_name, decision, concerns) |> 
+#   kbl()
+```
+
+## Content diversity
+
+A note on content diversity: As shown in @tbl-content, the current selection covers most of the (very rough) content labels we had originally assigned.
+
+```{r}
+#| label: tbl-content
+#| tbl-cap: "Overview of how the different content labels are represented in the selection" 
+#| 
+# content diversity
+content_diversity <- read_csv("reviews/reviews_wide.csv") |> 
+  left_join(reviews_screening) |> 
+  select(code_name, intervention_content, selected) |> 
+  mutate(selected = ifelse(is.na(selected), 
+                "not_selected", 
+                selected)
+         )
+  
+content_summary <- content_diversity |> 
+  group_by(intervention_content, selected) |> 
+  summarise(n = n_distinct(code_name)) |> 
+  pivot_wider(names_from = selected, 
+              values_from = n,
+              values_fill = 0) 
+
+content_summary |> 
+  kbl() |> 
+  kableExtra::row_spec(
+    which(content_summary$selected == 0),
+    bold = TRUE,
+    background = "#fff3cd"
   )
 ```
 
 
-```{r}
-#| label: fig-weights
-#| fig-cap: Distribtions of weights assigned by the different reviewers, ordered by category.
 
 
-# Plot
-p <- ggplot() +
-  
-  # Boxplot
-  geom_boxplot(
-    data = weights_long,
-    aes(x = category, y = weight),
-    width = 0.3,
-    outlier.shape = NA,
-    alpha = 0.7
-  ) +
-  
-  # Points with tooltips
-  geom_point(
-    data = weights_long,
-    aes(
-      x = category,
-      y = weight,
-      text = paste0(
-        "Reviewer: ", reviewer_id,
-        "<br>Weight: ", round(weight, 3)
-      )
-    ),
-    position = position_jitter(width = 0.1),
-    size = 2,
-    alpha = 0.8
-  ) +
-  
-  labs(
-    x = NULL,
-    y = "Weight assigned by reviewers",
-  ) +
-  coord_flip() +
-  plot_theme
 
-# Convert to plotly
-ggplotly(p, tooltip = "text")
 
-```
 
-```{r}
-# non-interactive alternative
-# ggplot(weights_long, aes(x = category, y = weight)) +
-#   
-#   # Half violin (right), nudged slightly
-#   geom_half_violin(
-#     side = "r",
-#     alpha = 0.6,
-#     width = 0.7,
-#     trim = FALSE,
-#     position = position_nudge(x = 0.15)
-#   ) +
-#   
-#   # Half boxplot (left), nudged slightly
-#   geom_half_boxplot(
-#     side = "l",
-#     width = 0.4,
-#     outlier.shape = NA,
-#     position = position_nudge(x = -0.15)
-#   ) +
-#   
-#   # Points centered, with tooltip info
-#   geom_point(
-#     aes(
-#       text = paste0(
-#         "Reviewer: ", reviewer_id, "<br>",
-#         "Weight: ", round(weight, 3), "<br>",
-#         "Category: ", category
-#       )
-#     ),
-#     position = position_jitter(width = 0.03, height = 0),
-#     alpha = 0.8,
-#     size = 2
-#   ) +
-#   
-#   labs(
-#     x = NULL,
-#     y = "Reviewer Weight",
-#     title = "Distribution of Reviewer Weights by Category"
-#   ) +
-#   plot_theme +
-#   coord_flip()
-```
-
-```{r}
-#| label: tbl-weights
-#| tbl-cap: Weights assigned by the different reviewers.
-
-
-weights_clean <- weights |> 
-  rename_with(~ str_replace(.x, "_weight$", "") |>      # remove trailing _weight
-                 str_replace_all("_", " ") |>          # replace underscores with space
-                 str_to_title()                         # capitalize words
-              , 
-              .cols = -reviewer_id)  |>                    # leave reviewer_id unchanged
-  rounded_numbers()
-
-weights_clean |> 
-  kbl()
-```
-
-# Calculation of review scores
-
-## Weighted reviewer scores
-
-Each reviewer assigned a weight to each of the four evaluation criteria:
-
-$$
-\text{rating\_vars} = [\text{"Theoretical grounding"}, \text{"Theoretical insight"}, \text{"Odds of success"}, \text{"Practical relevance"}]
-$$
-
-For each reviewer, we computed a weighted average score for each intervention they reviewed. based on their own specific weights. Let $w_{r,c}$ be the weight reviewer $r$ gives to criterion $c$, and $x_{r,i,c}$ be their rating for intervention i on that criterion. Then the review score is:
-
-$$
-\text{score}_{r,i} = \frac{\sum_{c \in \text{rating\_vars}} w_{r,c} \cdot x_{r,i,c}}{\sum_{c \in \text{rating\_vars}} w_{r,c}} 
-$$
-
-Since the weights all add up to 1, this simplifies to: 
-
-$$
-\text{score}_{r,i} = \sum_{c \in \text{rating\_vars}} w_{r,c} \cdot x_{r,i,c}
-$$
-
-## Standardization 
-
-Reviewers tend to use the rating scales differently: some use the whole scale, some use a narrow band; some generally assign higher scores, some generally lower scores. We therefore standardize the reviewer's scores by z_scoring them. Let: $\text{score}_{r,i}$ be the weighted score reviewer $r$ assigned to intervention $i$, $\mu_r$ be the mean of reviewer $r$'s scores across all interventions they rated, $\sigma_r$ be the standard deviation of reviewer $r$'s scores.
-
-Then the standardized score is:
-
-$$
-\text{zscore}_{r,i}
-= \frac{\text{score}_{r,i} - \mu_r}{\sigma_r}.
-$$
-
-This normalization places all reviews on a common scale in units of (reviewer specific) standard deviation (with mean $0$ and standard deviation $1$).
-
-## Final score per intervention
-
-Each intervention is reviewed by three reviewers. To get the overall score for an intervention, we take the average of the three reviewers’ weighted scores:
-
-$$
-\text{overall\_score}_i = \frac{1}{3} \sum_{r=1}^{3} \text{zscore}_{r,i}
-$$
-
-# Scores
-
-## Top 20 
-
-```{r}
-#| label: fig-top20
-#| fig-cap: Top 20 interventions, according to their overall score (the combined weighted averages of the three reviewers). The line shows the range of reviews, from the lowest to the highest of the three scores. In colors are the average scores (not weighted) of the category-specific ratings of the three reviewers. 
-
-# Prepare plot data in one pipeline
-plot_data <- reviews_long %>%
-  group_by(intervention_id, code_name) %>%
-  summarise(
-    overall_score = mean(overall_std_score, na.rm = TRUE),
-    min_score = min(score_std, na.rm = TRUE),
-    max_score = max(score_std, na.rm = TRUE),
-    Theoretical_Grounding = mean(theoretical_grounding_std, na.rm = TRUE),
-    Theoretical_Insight   = mean(theoretical_insight_std, na.rm = TRUE),
-    Odds_of_Success       = mean(odds_of_success_std, na.rm = TRUE),
-    Practical_Relevance   = mean(practical_relevance_std, na.rm = TRUE),
-    .groups = "drop"
-  ) %>%
-  pivot_longer(
-    cols = c(Theoretical_Grounding, Theoretical_Insight, Odds_of_Success, Practical_Relevance),
-    names_to = "category",
-    values_to = "avg_score"
-  ) %>%
-  # Order interventions by overall_score descending
-  arrange(desc(overall_score)) %>%
-  left_join(reviews_wide |> 
-              select(code_name, score_std_1, score_std_2, score_std_3)) |> 
-  rounded_numbers() 
-
-
-# create ranks for top 20
-intervention_rank <- plot_data %>%
-  select(code_name, overall_score) |> 
-  distinct(code_name, overall_score) %>%
-  arrange(desc(overall_score), code_name) %>%
-  mutate(rank = row_number(),
-         code_name_ranked = paste0(rank, ". ", code_name)) |> 
-  select(-overall_score) |> 
-  slice_head(n = 20)
-
-# add ranks
-plot_data <- plot_data %>%
-  # select only top 20
-  filter(code_name %in% intervention_rank$code_name) |> 
-  left_join(intervention_rank, by = "code_name") 
-
-# Create a vector of code_name levels in descending overall_score
-# this is necessary, because we the ranks are in descending order
-levels_order <- plot_data %>%
-  distinct(code_name_ranked, code_name, overall_score) %>%          # one row per intervention
-  arrange(overall_score, desc(code_name)) %>%               # top overall_score first
-  pull(code_name_ranked)                                # extract code_name vector
-
-# Apply factor with correct levels
-plot_data <- plot_data %>%
-  mutate(code_name_ranked = factor(code_name_ranked, levels = levels_order)) 
-
-# 8. Plot
-p <- ggplot(plot_data, aes(x = code_name_ranked)) +
-  
-  # Pointrange: min → max reviewer score
-  geom_pointrange(
-    aes(x = code_name_ranked, 
-        y = overall_score, ymin = min_score, ymax = max_score, 
-        text = paste0(code_name, " (overall): ", overall_score, 
-                      "<br> Score 1: ", score_std_1,
-                      "<br> Score 2: ", score_std_2,
-                      "<br> Score 3: ", score_std_3)
-        ),
-    color = "gray50",
-    inherit.aes = FALSE,
-    position = position_nudge(x = 0.5)
-  ) +
-  
-  # Points for category averages, colored
-  geom_point(
-    aes(y = avg_score, color = category, 
-        text = paste0(code_name, 
-                      "<br>", category, ": ", avg_score)
-        ),
-    size = 0.8,
-    position = position_dodge(width = 0.3)
-  ) +
-  
-  # colors
-  scale_color_manual(values = wes_palette("AsteroidCity1")) +
-  
-  # scale
-  scale_x_discrete(expand = expansion(add = c(0, 2))) +
-  
-  coord_flip() +
-  labs(
-    x = NULL,
-    y = "Score",
-    color = "Category",
-  ) +
-  plot_theme
-
-# make interactive
-ggplotly(p, tooltip = "text")
-```
-
-
-## By reviewer
-
-```{r}
-#| label: fig-scores-by-reviewers
-#| fig-cap: Distribtions of reviewer scores (weighted averages of the different rating categories). Each dot corresponds to a review. Lines with dot in the middle (above the boxplots) represent the reviewer specific means and their 95% CIs.
-
-# Compute summary stats per reviewer
-summaries <- reviews_long %>%
-  rounded_numbers() |> 
-  group_by(reviewer_id) %>%
-  summarise(
-    mean_score = mean(score_std, na.rm = TRUE),
-    sd_score   = sd(score_std, na.rm = TRUE),
-    n          = n(),
-    se         = sd_score / sqrt(n),
-    ci_low     = mean_score - 1.96 * se,   # 95% CI
-    ci_high    = mean_score + 1.96 * se
-  ) %>%
-  arrange(mean_score) %>%                  # ORDER reviewers
-  rounded_numbers() |> 
-  mutate(reviewer_id = factor(reviewer_id, levels = reviewer_id))
-
-reviews_plot <- reviews_long %>%
-  mutate(reviewer_id = factor(reviewer_id,
-                              levels = summaries$reviewer_id)) |> 
-  rounded_numbers() 
-
-p <- ggplot(reviews_plot, aes(x = reviewer_id, y = score_std)) +
-  
-  # Boxplot
-  geom_boxplot(
-    width = 0.3,
-    outlier.shape = NA,
-    alpha = 0.7
-  ) +
-  
-  # Means and confidence interval (95% CI)
-  geom_pointrange(
-    data = summaries,
-    aes(x = reviewer_id, 
-        y = mean_score, ymin = ci_low, ymax = ci_high,
-        text = paste0(
-        "Mean score: ", mean_score)
-        ),
-    width = 0.15,
-    linewidth = 0.7,
-    inherit.aes = FALSE,
-  position = position_nudge(x = 0.3)
-  ) +
-  
-  # Points with tooltips
-  geom_point(
-    data = reviews_plot,
-    aes(
-      text = paste0(
-        "Intervention: ", code_name,
-        "<br>Reviewer score: ", score_std,
-        "<br>Overall score: ", overall_std_score
-      )
-    ),
-    position = position_jitter(width = 0.1),
-    size = 2,
-    alpha = 0.8
-  ) +
-  
-  labs(
-    x = "Reviewer",
-    y = "Score"
-  ) +
-  coord_flip() +
-  plot_theme
-
-
-# Convert to plotly
-ggplotly(p, tooltip = "text")
-```
-
-## By content
-
-```{r}
-#| label: fig-scores-by-content
-#| fig-cap: Overall scores for interventions by content label. Each dot corresponds to an intervention. Lines with dot in the middle (above the boxplots) represent the specific means of the respective content labels, and their 95% CIs.
-
-## --- Summary statistics per topic ---
-
-summaries_topic <- reviews_long %>%
-  rounded_numbers() %>%
-  group_by(intervention_content) %>%
-  summarise(
-    mean_score = mean(overall_std_score, na.rm = TRUE),
-    sd_score   = sd(overall_std_score, na.rm = TRUE),
-    n          = n(),
-    se         = sd_score / sqrt(n),
-    ci_low     = mean_score - 1.96 * se,
-    ci_high    = mean_score + 1.96 * se,
-    .groups = "drop"
-  ) %>%
-  arrange(mean_score) %>%        # ORDER topics
-  rounded_numbers() %>%
-  mutate(intervention_content = factor(intervention_content,
-                                       levels = intervention_content))
-
-
-## --- Apply the same order to the long data ---
-
-reviews_topic_plot <- reviews_long %>%
-  mutate(intervention_content = factor(intervention_content,
-                                       levels = summaries_topic$intervention_content)) %>%
-  rounded_numbers() |> 
-  group_by(code_name, intervention_content) |> 
-  summarize(score = mean(overall_std_score, na.rm=TRUE)) |> 
-  ungroup()
-
-
-## --- Plot ---
-
-p_topic <- ggplot(reviews_topic_plot, aes(x = intervention_content, y = score)) +
-  
-  # Boxplot per topic
-  geom_boxplot(
-    width = 0.3,
-    outlier.shape = NA,
-    alpha = 0.7
-  ) +
-  
-  # Mean + 95% CI per topic
-  geom_pointrange(
-    data = summaries_topic,
-    aes(
-      x = intervention_content,
-      y = mean_score,
-      ymin = ci_low,
-      ymax = ci_high,
-      text = paste0("Mean score: ", mean_score)
-    ),
-    width = 0.15,
-    linewidth = 0.7,
-    inherit.aes = FALSE,
-    position = position_nudge(x = 0.4)
-  ) +
-  
-  # Individual review scores
-  geom_point(
-    data = reviews_topic_plot,
-    aes(
-      text = paste0(
-        "Intervention: ", code_name,
-        "<br>Topic: ", intervention_content,
-        "<br>Overall score: ", score
-      )
-    ),
-    position = position_jitter(width = 0.1),
-    size = 2,
-    alpha = 0.8
-  ) +
-  
-  labs(
-    x = "Intervention Topic",
-    y = "Score"
-  ) +
-  coord_flip() +
-  plot_theme
-
-
-## --- Convert to Plotly for tooltips ---
-ggplotly(p_topic, tooltip = "text")
-```
-
-
-## All 
-
-```{r}
-#| label: fig-ranking-all
-#| fig-cap: All interventions, according to their overall score (the combined weighted averages of the three reviewers). The line shows the range of reviews, from the lowest to the highest of the three scores. In colors are the the category-specific averages (not weighted) of the three reviewers. 
-#| fig-height: 40
-
-# Prepare plot data in one pipeline
-plot_data <- reviews_long %>%
-  group_by(intervention_id, code_name) %>%
- summarise(
-    overall_score = mean(overall_std_score, na.rm = TRUE),
-    min_score = min(score_std, na.rm = TRUE),
-    max_score = max(score_std, na.rm = TRUE),
-    Theoretical_Grounding = mean(theoretical_grounding_std, na.rm = TRUE),
-    Theoretical_Insight   = mean(theoretical_insight_std, na.rm = TRUE),
-    Odds_of_Success       = mean(odds_of_success_std, na.rm = TRUE),
-    Practical_Relevance   = mean(practical_relevance_std, na.rm = TRUE),
-    .groups = "drop"
-  ) %>%
-  pivot_longer(
-    cols = c(Theoretical_Grounding, Theoretical_Insight, Odds_of_Success, Practical_Relevance),
-    names_to = "category",
-    values_to = "avg_score"
-  ) %>%
-  # Order interventions by overall_score descending
-  arrange(overall_score) %>%
-  left_join(reviews_wide |> 
-              select(code_name, score_std_1, score_std_2, score_std_3)) |>
-  rounded_numbers()   # if you still want to round
-
-
-# create ranks
-intervention_rank <- plot_data %>%
-  select(code_name, overall_score) |> 
-  distinct(code_name, overall_score) %>%
-  arrange(desc(overall_score), code_name) %>%
-  mutate(rank = row_number(),
-         code_name_ranked = paste0(rank, ". ", code_name)) |> 
-  select(-overall_score)
-
-# add ranks
-plot_data <- plot_data %>%
-  left_join(intervention_rank, by = "code_name") 
-
-# Create a vector of code_name levels in descending overall_score
-levels_order <- plot_data %>%
-  distinct(code_name_ranked, code_name, overall_score) %>%          # one row per intervention
-  arrange(overall_score, desc(code_name)) %>%               # top overall_score first
-  pull(code_name_ranked)                                # extract code_name vector
-
-# Apply factor with correct levels
-plot_data <- plot_data %>%
-  mutate(code_name_ranked = factor(code_name_ranked, levels = levels_order)) 
-
-# Plot
-
-p <- ggplot(plot_data, aes(x = code_name_ranked)) +
-  
-  # Pointrange: min → max reviewer score
-  geom_pointrange(
-    aes(x = code_name_ranked, 
-        y = overall_score, ymin = min_score, ymax = max_score, 
-        text = paste0(code_name, " (overall): ", overall_score, 
-                      "<br> Score 1: ", score_std_1,
-                      "<br> Score 2: ", score_std_2,
-                      "<br> Score 3: ", score_std_3)
-        ),
-    color = "gray50",
-    inherit.aes = FALSE,
-    position = position_nudge(x = 0.5)
-  ) +
-  
-  # Points for category averages, colored
-  geom_point(
-    aes(y = avg_score, color = category, 
-        text = paste0(code_name, 
-                      "<br>", category, ": ", avg_score)
-    ),
-    size = 0.8,
-    position = position_dodge(width = 0.3)
-  ) +
-  
-  # since coords are flipped, use vline in horizontal
-  geom_vline(
-    xintercept = n_distinct(plot_data$code_name_ranked)-20 + 0.5,   # after the 20th intervention
-    color = "red",
-    linetype = "dashed"
-  ) +
-  
-  # colors
-  scale_color_manual(values = wes_palette("AsteroidCity1")) +
-  
-  # scale
-  scale_x_discrete(expand = expansion(add = c(0, 2))) +
-  
-  coord_flip() +
-  labs(
-    x = NULL,
-    y = "Score",
-    color = "Category",
-  ) +
-  plot_theme
-
-# make interactive
-ggplotly(p, tooltip = "text")
-```
 
 
 

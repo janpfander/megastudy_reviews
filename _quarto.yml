@@ -10,9 +10,9 @@ website:
     left:
       - text: "Analysis"
         menu:
-          - href: index.qmd
+          - href: analysis.qmd
             text: "standardized scores"
-          - href: index_non_standardized.qmd
+          - href: analysis_non_standardized.qmd
             text: "non-standardized scores"
       - text: "Data Explorer"
         menu:
@@ -24,6 +24,8 @@ website:
             text: "non-standardized scores"
       - href: slides.qmd
         text: "Slides plenary meeting"
+      - href: index.qmd
+        text: "Selection (preliminary)"
 
   page-footer: 
     background: light
