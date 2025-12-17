@@ -23,7 +23,7 @@ website:
           - href: data_explorer_non_standardized.qmd
             text: "non-standardized scores"
       - href: slides.qmd
-        text: "slides"
+        text: "Slides plenary meeting"
 
   page-footer: 
     background: light

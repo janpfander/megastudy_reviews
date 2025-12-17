@@ -215,5 +215,33 @@
     "title": "Plenary meeting for intervention selection",
     "section": "",
     "text": "Timeline\n\nGeneral points (~5mins)\n\n\nafterwards: summary\n\n\nGeneral points"
+  },
+  {
+    "objectID": "final_ranking.html",
+    "href": "final_ranking.html",
+    "title": "Final selection",
+    "section": "",
+    "text": "We will be able to test 20 interventions in our study. The research team has made pre-final decisions on which intervention proposals to select. We would like to give you the opportunity to challenge these decisions (or support them, if you agree).\nWe used the aggregate scores from your individual reviews as a baseline: by default, the interventions that made it into the top 20 will be selected for testing.\nHowever, screening the reviews and the top 20, the research team has set additional inclusion criteria, which not all interventions in the top 20 met."
+  },
+  {
+    "objectID": "final_ranking.html#inclusion-criteria",
+    "href": "final_ranking.html#inclusion-criteria",
+    "title": "Final selection",
+    "section": "Inclusion criteria",
+    "text": "Inclusion criteria\n\nNo fictional characters\n\nSeveral interventions use fictional scientists, journals, or scientific communities. It is hard to anticipate if these interventions will become practically relevant. Further, they require that we debrief participants after the intervention, for ethical reasons. This is problematic for the second, follow-up study: we will likely not be able to detect an effect, or worse, even find negative long-term effects if we invent facts on climate scientists.\n\nDiversity\n\nIdeally, we want to test a wide range of different interventions. With similar interventions, we used two strategies to avoid redundancy: When there were complementary elements, we suggest merging (and offer co-authorship to all involved teams). When two interventions were essentially the same, we picked the one that was better ranked.\n\nMajor concerns on effectiveness\n\nWe suggest excluding one intervention, because we believe it is too unrelated to our outcome variable, trust in climate scientists. In another case, we justified exclusions with major concerns stated in one of the reviewer comments (but in this case, a similar, and higher-ranked intervention is already included)."
+  },
+  {
+    "objectID": "final_ranking.html#selection-decisions-pre-final",
+    "href": "final_ranking.html#selection-decisions-pre-final",
+    "title": "Final selection",
+    "section": "Selection decisions (pre-final)",
+    "text": "Selection decisions (pre-final)\nTable 1 provides a summary, and Table 2 lists all decisions as proposed by the research team. These decisions are not final.\n\n\n\n\nTable 1: Summary table\n\n\n\n\n\n\ndecision\nn\n\n\n\n\n✅ Keep\n11\n\n\n✏️ Adapt\n7\n\n\n❌ Remove\n14\n\n\n🔀 Merge\n3\n\n\n\n\n\n\n\n\n\n\n\n\nTable 2: Detailed table with all decisions"
+  },
+  {
+    "objectID": "final_ranking.html#content-diversity",
+    "href": "final_ranking.html#content-diversity",
+    "title": "Final selection",
+    "section": "Content diversity",
+    "text": "Content diversity\nA note on content diversity: As shown in Table 3, the current selection covers most of the (very rough) content labels we had originally assigned.\n\n\n\n\nTable 3: Overview of how the different content labels are represented in the selection\n\n\n\n\n\n\nintervention_content\nnot_selected\nselected\n\n\n\n\n(bi)partisan support\n7\n0\n\n\nLLM\n5\n3\n\n\nhigh public trust\n2\n1\n\n\nimpact of climate science\n3\n4\n\n\nintrospection\n7\n1\n\n\nother\n5\n2\n\n\nportrait\n13\n1\n\n\nscientific consensus\n1\n1\n\n\nscientific findings\n6\n3\n\n\nscientific practices\n24\n2\n\n\nscientists’ background\n4\n1\n\n\nscientists’ values/motivation\n7\n0\n\n\nthird party endorsement\n0\n2"
   }
 ]
